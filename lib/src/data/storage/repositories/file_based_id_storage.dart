@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import '../../../domain/storage/repositories/storage.dart';
+import '../../../domain/core/value_objects/namespace.dart';
 
 /// File-based implementation of AsyncIdStorage that persists data to JSON files asynchronously.
 ///
@@ -62,40 +63,34 @@ class FileBasedIdStorage implements IdStorage {
   }
 
   @override
-  Future<void> add({required IdPair idPair}) async {
+  Future<void> add({required Namespace namespace}) async {
     await _loadFromFile();
     final codes = (_data['ids'] as Map<String, Set<String>>).putIfAbsent(
-      idPair.idType.toString(),
+      namespace.uri.toString(),
       () => {},
     );
-    codes.add(idPair.idCode);
+    codes.add(namespace.idCode);
     await _saveToFile();
   }
 
   @override
-  Future<void> remove({required IdPair idPair}) async {
+  Future<void> remove({required Namespace namespace}) async {
     await _loadFromFile();
-    (_data['ids'] as Map<String, Set<String>>)[idPair.idType.toString()]
-        ?.remove(idPair.idCode);
+    (_data['ids'] as Map<String, Set<String>>)[namespace.uri.toString()]
+        ?.remove(namespace.idCode);
     await _saveToFile();
   }
 
   @override
-  Future<bool> contains({required IdPair idPair}) async {
+  Future<bool> contains({required Namespace namespace}) async {
     await _loadFromFile();
-    return (_data['ids'] as Map<String, Set<String>>)[idPair.idType.toString()]
-            ?.contains(idPair.idCode) ??
+    return (_data['ids'] as Map<String, Set<String>>)[namespace.uri.toString()]
+            ?.contains(namespace.idCode) ??
         false;
   }
 
   @override
-  Future<Set<String>> getAll({required String idType}) async {
-    await _loadFromFile();
-    return Set.from((_data['ids'] as Map<String, Set<String>>)[idType] ?? {});
-  }
-
-  @override
-  Future<Set<String>> getAllTypes() async {
+  Future<Set<String>> getAll() async {
     await _loadFromFile();
     return Set.from((_data['ids'] as Map<String, Set<String>>).keys);
   }

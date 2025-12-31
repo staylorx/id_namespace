@@ -1,4 +1,5 @@
 import '../../../domain/storage/repositories/storage.dart';
+import '../../../domain/core/value_objects/namespace.dart';
 
 /// In-memory implementation of AsyncIdStorage using `Map<String, Set<String>>`.
 ///
@@ -9,28 +10,22 @@ class InMemoryIdStorage implements IdStorage {
 
   @override
   Future<void> add({required Namespace namespace}) async {
-    final codes = _data.putIfAbsent(namespace.idType.toString(), () => {});
+    final codes = _data.putIfAbsent(namespace.uri.toString(), () => {});
     codes.add(namespace.idCode);
   }
 
   @override
   Future<void> remove({required Namespace namespace}) async {
-    _data[namespace.idType.toString()]?.remove(namespace.idCode);
+    _data[namespace.uri.toString()]?.remove(namespace.idCode);
   }
 
   @override
   Future<bool> contains({required Namespace namespace}) async {
-    return _data[namespace.idType.toString()]?.contains(namespace.idCode) ??
-        false;
+    return _data[namespace.uri.toString()]?.contains(namespace.idCode) ?? false;
   }
 
   @override
-  Future<Set<String>> getAll({required String idType}) async {
-    return Set.from(_data[idType] ?? {});
-  }
-
-  @override
-  Future<Set<String>> getAllTypes() async {
+  Future<Set<String>> getAll() async {
     return Set.from(_data.keys);
   }
 

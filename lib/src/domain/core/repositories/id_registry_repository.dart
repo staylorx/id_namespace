@@ -4,18 +4,18 @@ import '../value_objects/namespace.dart';
 abstract class IdRegistryRepository {
   /// Registers an Namespace, checking for validation and uniqueness violations.
   ///
-  /// returns [ValidationFailure] if any idCode fails validation for its idType.
-  /// returns [DuplicateIdFailure] if any idType in the set conflicts
+  /// returns [ValidationFailure] if any idCode fails validation for its uri.
+  /// returns [DuplicateIdFailure] if any uri in the set conflicts
   /// with existing registrations.
-  Future<void> add({required Namespace namespaceSet});
+  Future<void> add({required Namespace namespace});
 
   /// Unregisters an Namespace, removing its identifiers from the registry.
-  Future<void> remove({required Namespace namespaceSet});
+  Future<void> remove({required Namespace namespace});
 
-  /// Checks if a specific idType and idCode combination is already registered.
+  /// Checks if a specific uri and idCode combination is already registered.
   Future<bool> isRegistered({required Namespace namespace});
 
-  /// Returns all registered idCodes for a given idType.
+  /// Returns all registered idCodes for a given uri.
   Future<Set<Namespace>> getNamespaceByPrefix({required String prefix});
   Future<Set<Namespace>> getNamespaceByCode({required String code});
 

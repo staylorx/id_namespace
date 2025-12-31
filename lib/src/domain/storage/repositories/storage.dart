@@ -5,21 +5,18 @@ import '../../core/value_objects/namespace.dart';
 /// This allows different async persistence implementations (in-memory, database, etc.)
 /// to be plugged into async versions of IdRegistry.
 abstract class IdStorage {
-  /// Adds an idCode to the set for the given idType asynchronously.
+  /// Adds an idCode to the set for the given uri asynchronously.
   Future<void> add({required Namespace namespace});
 
-  /// Removes an idCode from the set for the given idType asynchronously.
+  /// Removes an idCode from the set for the given uri asynchronously.
   Future<void> remove({required Namespace namespace});
 
-  /// Checks if the idCode exists for the given idType asynchronously.
+  /// Checks if the idCode exists for the given uri asynchronously.
   Future<bool> contains({required Namespace namespace});
 
-  /// Returns all idCodes for the given idType asynchronously.
+  /// Returns all idCodes for the given uri asynchronously.
   Future<Set<String>> getAll();
 
   /// Clears all stored data asynchronously.
   Future<void> clear();
-
-  /// Returns all idTypes that have registered codes asynchronously.
-  Future<Set<String>> getAllTypes();
 }
