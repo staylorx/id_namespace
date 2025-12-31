@@ -72,7 +72,9 @@ class FileBasedIdStorage implements IdStorage {
       () => {},
     );
     if (codes.contains(namespace.prefix)) {
-      return Left(DuplicateIdFailure(namespace.prefix, namespace.uri));
+      return Left(
+        DuplicateIdFailure(prefix: namespace.prefix, uri: namespace.uri),
+      );
     }
     codes.add(namespace.prefix);
 
@@ -122,7 +124,9 @@ class FileBasedIdStorage implements IdStorage {
 
   /// Returns all ID codes for the given URI.
   @override
-  Future<Either<Failure, Set<String>>> getIdCodesForUri(Uri uri) async {
+  Future<Either<Failure, Set<String>>> getIdCodesForUri({
+    required Uri uri,
+  }) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) {
       return Left(

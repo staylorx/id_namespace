@@ -23,7 +23,7 @@ class DuplicateIdFailure extends Failure {
   final String prefix;
   final Uri uri;
 
-  const DuplicateIdFailure(this.prefix, this.uri);
+  const DuplicateIdFailure({required this.prefix, required this.uri});
 
   @override
   List<Object?> get props => [prefix, uri];

@@ -5,10 +5,11 @@ import 'package:id_namespace/src/domain/core/repositories/id_registry_repository
 import 'package:id_namespace/src/domain/core/value_objects/namespace.dart';
 import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
 
+/// Implementation of IdRegistryRepository using IdStorage.
 class IdRegistryRepositoryImpl implements IdRegistryRepository {
   final IdStorage storage;
 
-  IdRegistryRepositoryImpl(this.storage);
+  IdRegistryRepositoryImpl({required this.storage});
 
   /// Registers the namespace.
   @override
@@ -64,18 +65,22 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   @override
   Future<Either<Failure, Set<Namespace>>> getAll() async {
     final urisResult = await storage.getAllUris();
-    return urisResult.fold((failure) => Left(failure), (uris) async {
-      final Set<Namespace> result = {};
-      for (final uriStr in uris) {
-        final uri = Uri.parse(uriStr);
-        final codesResult = await storage.getIdCodesForUri(uri);
-        final codes = codesResult.getOrElse((failure) => {});
-        for (final idCode in codes) {
-          result.add(Namespace(uri: uri, prefix: idCode));
-        }
+    if (urisResult.isLeft()) {
+      return Left(
+        urisResult.getLeft().getOrElse(() => StorageFailure('Unknown error')),
+      );
+    }
+    final uris = urisResult.getRight().getOrElse(() => {});
+    final Set<Namespace> result = {};
+    for (final uriStr in uris) {
+      final uri = Uri.parse(uriStr);
+      final codesResult = await storage.getIdCodesForUri(uri: uri);
+      final codes = codesResult.getOrElse((failure) => {});
+      for (final idCode in codes) {
+        result.add(Namespace(uri: uri, prefix: idCode));
       }
-      return Right(result);
-    });
+    }
+    return Right(result);
   }
 
   /// Clears all registrations.

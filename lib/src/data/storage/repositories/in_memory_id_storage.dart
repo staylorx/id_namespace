@@ -17,7 +17,9 @@ class InMemoryIdStorage implements IdStorage {
     final uriKey = namespace.uri.toString();
     final codes = _data.putIfAbsent(uriKey, () => {});
     if (codes.contains(namespace.prefix)) {
-      return Left(DuplicateIdFailure(namespace.prefix, namespace.uri));
+      return Left(
+        DuplicateIdFailure(prefix: namespace.prefix, uri: namespace.uri),
+      );
     }
     codes.add(namespace.prefix);
     return Right(unit);
@@ -46,7 +48,9 @@ class InMemoryIdStorage implements IdStorage {
 
   /// Returns ID codes for the URI.
   @override
-  Future<Either<Failure, Set<String>>> getIdCodesForUri(Uri uri) async {
+  Future<Either<Failure, Set<String>>> getIdCodesForUri({
+    required Uri uri,
+  }) async {
     return Right(_data[uri.toString()] ?? {});
   }
 

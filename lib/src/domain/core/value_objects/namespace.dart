@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:rdf_core/rdf_core.dart';
 
+/// Represents a namespace with a URI, prefix, optional description, and RDF graph.
 class Namespace with EquatableMixin {
   final Uri uri;
   final String prefix;

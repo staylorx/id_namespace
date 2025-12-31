@@ -46,7 +46,7 @@ class CachedIdStorage implements IdStorage {
       return Right(_cache[uriKey]!.contains(namespace.prefix));
     } else {
       // Fetch from storage and cache
-      final codesResult = await _storage.getIdCodesForUri(namespace.uri);
+      final codesResult = await _storage.getIdCodesForUri(uri: namespace.uri);
       return codesResult.fold((failure) => Left(failure), (codes) {
         _cache[uriKey] = codes;
         return Right(codes.contains(namespace.prefix));
@@ -61,14 +61,16 @@ class CachedIdStorage implements IdStorage {
   }
 
   @override
-  Future<Either<Failure, Set<String>>> getIdCodesForUri(Uri uri) async {
+  Future<Either<Failure, Set<String>>> getIdCodesForUri({
+    required Uri uri,
+  }) async {
     final uriKey = uri.toString();
     // Check cache first
     if (_cache.containsKey(uriKey)) {
       return Right(_cache[uriKey]!);
     } else {
       // Fetch from storage and cache
-      final codesResult = await _storage.getIdCodesForUri(uri);
+      final codesResult = await _storage.getIdCodesForUri(uri: uri);
       return codesResult.fold((failure) => Left(failure), (codes) {
         _cache[uriKey] = codes;
         return Right(codes);

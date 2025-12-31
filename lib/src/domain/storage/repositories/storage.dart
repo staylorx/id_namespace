@@ -21,7 +21,7 @@ abstract class IdStorage {
   Future<Either<Failure, Set<String>>> getAllUris();
 
   /// Returns all idCodes for the given uri asynchronously.
-  Future<Either<Failure, Set<String>>> getIdCodesForUri(Uri uri);
+  Future<Either<Failure, Set<String>>> getIdCodesForUri({required Uri uri});
 
   /// Clears all stored data asynchronously.
   Future<Either<Failure, Unit>> clear();
