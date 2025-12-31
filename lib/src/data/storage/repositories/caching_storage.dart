@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../domain/core/failures.dart';
+import '../../../utils/failures.dart';
 import '../../../domain/core/value_objects/namespace.dart';
 import '../../../domain/storage/repositories/storage.dart';
 

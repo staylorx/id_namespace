@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 
 import '../../../domain/storage/repositories/storage.dart';
-import '../../../domain/core/failures.dart';
+import '../../../utils/failures.dart';
 import '../../../domain/core/value_objects/namespace.dart';
 
 /// In-memory implementation of AsyncIdStorage using `Map<String, Set<String>>`.
@@ -11,6 +11,7 @@ class InMemoryIdStorage implements IdStorage {
   final Map<String, Set<String>> _data = {};
   final Map<String, int> _counters = {};
 
+  /// Adds the namespace.
   @override
   Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
     final uriKey = namespace.uri.toString();
@@ -22,12 +23,14 @@ class InMemoryIdStorage implements IdStorage {
     return Right(unit);
   }
 
+  /// Removes the namespace.
   @override
   Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
     _data[namespace.uri.toString()]?.remove(namespace.prefix);
     return Right(unit);
   }
 
+  /// Checks if the namespace exists.
   @override
   Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
     return Right(
@@ -35,16 +38,19 @@ class InMemoryIdStorage implements IdStorage {
     );
   }
 
+  /// Returns all URIs.
   @override
   Future<Either<Failure, Set<String>>> getAllUris() async {
     return Right(Set.from(_data.keys));
   }
 
+  /// Returns ID codes for the URI.
   @override
   Future<Either<Failure, Set<String>>> getIdCodesForUri(Uri uri) async {
     return Right(_data[uri.toString()] ?? {});
   }
 
+  /// Clears all data.
   @override
   Future<Either<Failure, Unit>> clear() async {
     _data.clear();

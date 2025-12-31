@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../domain/storage/repositories/storage.dart';
-import '../../../domain/core/failures.dart';
+import '../../../utils/failures.dart';
 import '../../../domain/core/value_objects/namespace.dart';
 
 /// File-based implementation of AsyncIdStorage that persists data to JSON files asynchronously.
@@ -60,6 +60,7 @@ class FileBasedIdStorage implements IdStorage {
     }
   }
 
+  /// Adds the namespace to the storage.
   @override
   Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
     final loadResult = await _loadFromFile();
@@ -78,6 +79,7 @@ class FileBasedIdStorage implements IdStorage {
     return await _saveToFile();
   }
 
+  /// Removes the namespace from the storage.
   @override
   Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
     final loadResult = await _loadFromFile();
@@ -88,6 +90,7 @@ class FileBasedIdStorage implements IdStorage {
     return await _saveToFile();
   }
 
+  /// Checks if the namespace exists in the storage.
   @override
   Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
     final loadResult = await _loadFromFile();
@@ -104,6 +107,7 @@ class FileBasedIdStorage implements IdStorage {
     );
   }
 
+  /// Returns all stored URIs.
   @override
   Future<Either<Failure, Set<String>>> getAllUris() async {
     final loadResult = await _loadFromFile();
@@ -116,6 +120,7 @@ class FileBasedIdStorage implements IdStorage {
     return Right(Set.from((_data['ids'] as Map<String, Set<String>>).keys));
   }
 
+  /// Returns all ID codes for the given URI.
   @override
   Future<Either<Failure, Set<String>>> getIdCodesForUri(Uri uri) async {
     final loadResult = await _loadFromFile();
@@ -130,6 +135,7 @@ class FileBasedIdStorage implements IdStorage {
     );
   }
 
+  /// Clears all data from the storage.
   @override
   Future<Either<Failure, Unit>> clear() async {
     final loadResult = await _loadFromFile();

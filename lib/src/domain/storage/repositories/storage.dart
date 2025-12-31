@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../core/failures.dart';
+import '../../../utils/failures.dart';
 import '../../core/value_objects/namespace.dart';
 
 /// Abstract interface for asynchronous storage of ID registry data.

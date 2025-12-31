@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../failures.dart';
+import '../../../utils/failures.dart';
 import '../value_objects/namespace.dart';
 
 /// Repository interface for managing global uniqueness of all idTypes across multiple Namespaces.
