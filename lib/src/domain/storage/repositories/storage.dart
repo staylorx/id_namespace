@@ -1,3 +1,6 @@
+import 'package:fpdart/fpdart.dart';
+
+import '../../core/failures.dart';
 import '../../core/value_objects/namespace.dart';
 
 /// Abstract interface for asynchronous storage of ID registry data.
@@ -6,17 +9,20 @@ import '../../core/value_objects/namespace.dart';
 /// to be plugged into async versions of IdRegistry.
 abstract class IdStorage {
   /// Adds an idCode to the set for the given uri asynchronously.
-  Future<void> add({required Namespace namespace});
+  Future<Either<Failure, Unit>> add({required Namespace namespace});
 
   /// Removes an idCode from the set for the given uri asynchronously.
-  Future<void> remove({required Namespace namespace});
+  Future<Either<Failure, Unit>> remove({required Namespace namespace});
 
   /// Checks if the idCode exists for the given uri asynchronously.
-  Future<bool> contains({required Namespace namespace});
+  Future<Either<Failure, bool>> contains({required Namespace namespace});
+
+  /// Returns all uri keys asynchronously.
+  Future<Either<Failure, Set<String>>> getAllUris();
 
   /// Returns all idCodes for the given uri asynchronously.
-  Future<Set<String>> getAll();
+  Future<Either<Failure, Set<String>>> getIdCodesForUri(Uri uri);
 
   /// Clears all stored data asynchronously.
-  Future<void> clear();
+  Future<Either<Failure, Unit>> clear();
 }
