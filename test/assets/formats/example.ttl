@@ -1,0 +1,136 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+@prefix ex: <http://example.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Person 1 - Alice Johnson
+ex:person1 a foaf:Person ;
+    foaf:name "Alice Johnson" ;
+    foaf:age 30 ;
+    schema:birthDate "1993-05-15"^^xsd:date ;
+    foaf:homepage <http://alice.example.org> ;
+    foaf:mbox <mailto:alice@example.org> ;
+    foaf:knows ex:person2, ex:person3 ;
+    schema:worksFor ex:company1 .
+
+# Person 2 - Bob Smith
+ex:person2 a foaf:Person ;
+    foaf:name "Bob Smith" ;
+    foaf:age 25 ;
+    schema:birthDate "1998-12-03"^^xsd:date ;
+    foaf:mbox <mailto:bob@example.org> ;
+    foaf:knows ex:person1 .
+
+# Person 3 - Carol Williams (Author)
+ex:person3 a foaf:Person, schema:Author ;
+    foaf:name "Carol Williams" ;
+    foaf:age 35 ;
+    schema:birthDate "1988-08-22"^^xsd:date ;
+    foaf:homepage <http://carol.example.org> ;
+    foaf:mbox <mailto:carol@example.org> ;
+    schema:author ex:book1, ex:article1 .
+
+# Company
+ex:company1 a schema:Organization ;
+    foaf:name "Tech Solutions Inc." ;
+    schema:address [
+        a schema:PostalAddress ;
+        schema:streetAddress "123 Main Street" ;
+        schema:addressLocality "Springfield" ;
+        schema:addressRegion "IL" ;
+        schema:postalCode "62701" ;
+        schema:addressCountry "US"
+    ] .
+
+# Publisher
+ex:publisher1 a schema:Organization ;
+    foaf:name "Academic Press" .
+
+# Book
+ex:book1 a schema:Book ;
+    dc:title "Advanced RDF Processing" ;
+    dc:description "A comprehensive guide to RDF data processing and semantic web technologies." ;
+    schema:author ex:person3 ;
+    schema:publisher ex:publisher1 ;
+    schema:isbn "978-0123456789" ;
+    schema:price "49.99"^^xsd:decimal ;
+    dc:created "2023-03-15T10:30:00Z"^^xsd:dateTime ;
+    schema:numberOfPages 350 .
+
+# Article
+ex:article1 a schema:Article ;
+    dc:title "Semantic Web Best Practices" ;
+    dc:description "An article discussing best practices in semantic web development." ;
+    schema:author ex:person3 ;
+    dc:created "2023-01-20T14:45:00Z"^^xsd:dateTime ;
+    schema:wordCount 2500 ;
+    schema:keywords "semantic web", "RDF", "linked data", "ontology" .
+
+# Dataset
+ex:dataset1 a schema:Dataset ;
+    dc:title "Sample Research Data" ;
+    dc:description "A dataset containing research measurements and observations." ;
+    dc:created "2023-02-10T09:15:00Z"^^xsd:dateTime ;
+    schema:creator ex:person1 ;
+    schema:distribution [
+        a schema:DataDownload ;
+        schema:encodingFormat "text/csv" ;
+        schema:contentUrl <http://example.org/data/sample.csv>
+    ] ;
+    schema:measurementTechnique "Statistical Analysis" ;
+    schema:variableMeasured "temperature", "humidity", "pressure" .
+
+# Additional complex structures for testing
+ex:collection1 a rdf:Bag ;
+    rdf:_1 "First item" ;
+    rdf:_2 "Second item" ;
+    rdf:_3 "Third item" .
+
+ex:sequence1 a rdf:Seq ;
+    rdf:_1 ex:person1 ;
+    rdf:_2 ex:person2 ;
+    rdf:_3 ex:person3 .
+
+# Blank node with multiple properties
+[] a foaf:Person ;
+    foaf:name "Anonymous User" ;
+    foaf:age 28 ;
+    foaf:knows ex:person1 ;
+    rdfs:comment "This is a blank node example for testing purposes." .
+
+# Multi-language literals
+ex:multilingual a schema:CreativeWork ;
+    dc:title "Hello World"@en ;
+    dc:title "Hola Mundo"@es ;
+    dc:title "Bonjour le Monde"@fr ;
+    dc:title "Hallo Welt"@de ;
+    dc:description "A simple greeting in multiple languages"@en .
+
+# Numeric and boolean literals
+ex:measurements a ex:DataPoint ;
+    ex:temperature "23.5"^^xsd:float ;
+    ex:humidity "65.2"^^xsd:double ;
+    ex:pressure "1013"^^xsd:integer ;
+    ex:isActive true ;
+    ex:timestamp "2023-06-15T14:30:00.123Z"^^xsd:dateTime ;
+    ex:duration "PT2H30M"^^xsd:duration .
+
+# Complex nested structure
+ex:project1 a schema:Project ;
+    dc:title "Semantic Web Research Project" ;
+    schema:member ex:person1, ex:person2, ex:person3 ;
+    schema:startDate "2023-01-01"^^xsd:date ;
+    schema:endDate "2023-12-31"^^xsd:date ;
+    schema:funding [
+        a schema:Grant ;
+        schema:funder [
+            a schema:Organization ;
+            foaf:name "Research Foundation"
+        ] ;
+        schema:amount "100000"^^xsd:decimal ;
+        schema:currency "USD"
+    ] ;
+    schema:result ex:book1, ex:article1, ex:dataset1 .

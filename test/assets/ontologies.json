@@ -1,0 +1,139 @@
+{
+    "ontologies": [
+        {
+            "code": "BRICK",
+            "formalName": "Brick Schema",
+            "downloadURL": "https://brickschema.org/schema/Brick.ttl"
+        },
+        {
+            "code": "CSVW",
+            "formalName": "CSV on the Web Vocabulary",
+            "downloadURL": "https://www.w3.org/ns/csvw.ttl"
+        },
+        {
+            "code": "DC",
+            "formalName": "Dublin Core Metadata Element Set",
+            "downloadURL": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.ttl"
+        },
+        {
+            "code": "DCAT",
+            "formalName": "Data Catalog Vocabulary",
+            "downloadURL": "https://www.w3.org/ns/dcat.ttl"
+        },
+        {
+            "code": "DCMITYPE",
+            "formalName": "DCMI Type Vocabulary",
+            "downloadURL": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_type.ttl"
+        },
+        {
+            "code": "DCTERMS",
+            "formalName": "DCMI Metadata Terms",
+            "downloadURL": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.ttl"
+        },
+        {
+            "code": "DCAM",
+            "formalName": "DCMI Abstract Model",
+            "downloadURL": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_abstract_model.ttl"
+        },
+        {
+            "code": "DOAP",
+            "formalName": "Description of a Project",
+            "downloadURL": "https://raw.githubusercontent.com/ewilderj/doap/master/schema/doap.rdf"
+        },
+        {
+            "code": "FOAF",
+            "formalName": "Friend of a Friend",
+            "downloadURL": "http://xmlns.com/foaf/spec/index.rdf"
+        },
+        {
+            "code": "ODRL2",
+            "formalName": "Open Digital Rights Language Vocabulary & Expression",
+            "downloadURL": "https://www.w3.org/ns/odrl/2/ODRL22.ttl"
+        },
+        {
+            "code": "ORG",
+            "formalName": "The Organization Ontology",
+            "downloadURL": "https://www.w3.org/ns/org.ttl"
+        },
+        {
+            "code": "OWL",
+            "formalName": "Web Ontology Language",
+            "downloadURL": "https://www.w3.org/2002/07/owl.rdf"
+        },
+        {
+            "code": "PROF",
+            "formalName": "Profiles Vocabulary",
+            "downloadURL": "https://www.w3.org/ns/dx/prof/prof.ttl"
+        },
+        {
+            "code": "PROV",
+            "formalName": "PROV Ontology",
+            "downloadURL": "https://www.w3.org/ns/prov.ttl"
+        },
+        {
+            "code": "QB",
+            "formalName": "RDF Data Cube Vocabulary",
+            "downloadURL": "https://www.w3.org/ns/datacube.ttl"
+        },
+        {
+            "code": "RDF",
+            "formalName": "Resource Description Framework",
+            "downloadURL": "https://www.w3.org/1999/02/22-rdf-syntax-ns.rdf"
+        },
+        {
+            "code": "RDFS",
+            "formalName": "RDF Schema",
+            "downloadURL": "https://www.w3.org/2000/01/rdf-schema.rdf"
+        },
+        {
+            "code": "SDO",
+            "formalName": "Schema.org",
+            "downloadURL": "https://schema.org/version/latest/schemaorg-current-https.ttl"
+        },
+        {
+            "code": "SH",
+            "formalName": "Shapes Constraint Language",
+            "downloadURL": "https://www.w3.org/ns/shacl.ttl"
+        },
+        {
+            "code": "SKOS",
+            "formalName": "Simple Knowledge Organization System",
+            "downloadURL": "https://www.w3.org/2009/08/skos-reference/skos.rdf"
+        },
+        {
+            "code": "SOSA",
+            "formalName": "Sensor, Observation, Sample, and Actuator",
+            "downloadURL": "https://www.w3.org/ns/sosa.ttl"
+        },
+        {
+            "code": "SSN",
+            "formalName": "Semantic Sensor Network Ontology",
+            "downloadURL": "https://www.w3.org/ns/ssn.ttl"
+        },
+        {
+            "code": "TIME",
+            "formalName": "Time Ontology in OWL",
+            "downloadURL": "https://www.w3.org/2006/time.rdf"
+        },
+        {
+            "code": "VANN",
+            "formalName": "Vocabulary for Annotating Vocabulary Descriptions",
+            "downloadURL": "http://purl.org/vocab/vann/vann-vocab-20100607.rdf"
+        },
+        {
+            "code": "VOID",
+            "formalName": "Vocabulary of Interlinked Datasets",
+            "downloadURL": "https://www.w3.org/TR/void/void.ttl"
+        },
+        {
+            "code": "WGS",
+            "formalName": "WGS84 Geo Positioning",
+            "downloadURL": "https://www.w3.org/2003/01/geo/wgs84_pos.rdf"
+        },
+        {
+            "code": "XSD",
+            "formalName": "XML Schema Definition Language",
+            "downloadURL": "https://www.w3.org/2001/XMLSchema.xsd"
+        }
+    ]
+}

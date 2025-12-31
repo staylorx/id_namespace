@@ -1,0 +1,152 @@
+{
+  "@context": {
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "dc": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "schema": "http://schema.org/",
+    "ex": "http://example.org/",
+    "name": "foaf:name",
+    "knows": "foaf:knows",
+    "homepage": {
+      "@id": "foaf:homepage",
+      "@type": "@id"
+    },
+    "age": {
+      "@id": "foaf:age",
+      "@type": "xsd:integer"
+    },
+    "birthDate": {
+      "@id": "schema:birthDate",
+      "@type": "xsd:date"
+    },
+    "created": {
+      "@id": "dc:created",
+      "@type": "xsd:dateTime"
+    },
+    "title": "dc:title",
+    "description": "dc:description",
+    "price": {
+      "@id": "schema:price",
+      "@type": "xsd:decimal"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "ex:person1",
+      "@type": "foaf:Person",
+      "name": "Alice Johnson",
+      "age": 30,
+      "birthDate": "1993-05-15",
+      "homepage": "http://alice.example.org",
+      "foaf:mbox": "mailto:alice@example.org",
+      "knows": [
+        {
+          "@id": "ex:person2"
+        },
+        {
+          "@id": "ex:person3"
+        }
+      ],
+      "schema:worksFor": {
+        "@id": "ex:company1",
+        "@type": "schema:Organization",
+        "name": "Tech Solutions Inc.",
+        "schema:address": {
+          "@type": "schema:PostalAddress",
+          "schema:streetAddress": "123 Main Street",
+          "schema:addressLocality": "Springfield",
+          "schema:addressRegion": "IL",
+          "schema:postalCode": "62701",
+          "schema:addressCountry": "US"
+        }
+      }
+    },
+    {
+      "@id": "ex:person2",
+      "@type": "foaf:Person",
+      "name": "Bob Smith",
+      "age": 25,
+      "birthDate": "1998-12-03",
+      "foaf:mbox": "mailto:bob@example.org",
+      "knows": {
+        "@id": "ex:person1"
+      }
+    },
+    {
+      "@id": "ex:person3",
+      "@type": [
+        "foaf:Person",
+        "schema:Author"
+      ],
+      "name": "Carol Williams",
+      "age": 35,
+      "birthDate": "1988-08-22",
+      "homepage": "http://carol.example.org",
+      "foaf:mbox": "mailto:carol@example.org",
+      "schema:author": [
+        {
+          "@id": "ex:book1"
+        },
+        {
+          "@id": "ex:article1"
+        }
+      ]
+    },
+    {
+      "@id": "ex:book1",
+      "@type": "schema:Book",
+      "title": "Advanced RDF Processing",
+      "description": "A comprehensive guide to RDF data processing and semantic web technologies.",
+      "schema:author": {
+        "@id": "ex:person3"
+      },
+      "schema:publisher": {
+        "@id": "ex:publisher1",
+        "@type": "schema:Organization",
+        "name": "Academic Press"
+      },
+      "schema:isbn": "978-0123456789",
+      "price": 49.99,
+      "created": "2023-03-15T10:30:00Z",
+      "schema:numberOfPages": 350
+    },
+    {
+      "@id": "ex:article1",
+      "@type": "schema:Article",
+      "title": "Semantic Web Best Practices",
+      "description": "An article discussing best practices in semantic web development.",
+      "schema:author": {
+        "@id": "ex:person3"
+      },
+      "created": "2023-01-20T14:45:00Z",
+      "schema:wordCount": 2500,
+      "schema:keywords": [
+        "semantic web",
+        "RDF",
+        "linked data",
+        "ontology"
+      ]
+    },
+    {
+      "@id": "ex:dataset1",
+      "@type": "schema:Dataset",
+      "title": "Sample Research Data",
+      "description": "A dataset containing research measurements and observations.",
+      "created": "2023-02-10T09:15:00Z",
+      "schema:creator": {
+        "@id": "ex:person1"
+      },
+      "schema:distribution": {
+        "@type": "schema:DataDownload",
+        "schema:encodingFormat": "text/csv",
+        "schema:contentUrl": "http://example.org/data/sample.csv"
+      },
+      "schema:measurementTechnique": "Statistical Analysis",
+      "schema:variableMeasured": [
+        "temperature",
+        "humidity",
+        "pressure"
+      ]
+    }
+  ]
+}

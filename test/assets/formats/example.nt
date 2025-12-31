@@ -1,0 +1,136 @@
+# Person 1 - Alice Johnson
+<http://example.org/person1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://example.org/person1> <http://xmlns.com/foaf/0.1/name> "Alice Johnson" .
+<http://example.org/person1> <http://xmlns.com/foaf/0.1/age> "30"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/person1> <http://schema.org/birthDate> "1993-05-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://example.org/person1> <http://xmlns.com/foaf/0.1/homepage> <http://alice.example.org> .
+<http://example.org/person1> <http://xmlns.com/foaf/0.1/mbox> <mailto:alice@example.org> .
+<http://example.org/person1> <http://xmlns.com/foaf/0.1/knows> <http://example.org/person2> .
+<http://example.org/person1> <http://xmlns.com/foaf/0.1/knows> <http://example.org/person3> .
+<http://example.org/person1> <http://schema.org/worksFor> <http://example.org/company1> .
+
+# Person 2 - Bob Smith
+<http://example.org/person2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://example.org/person2> <http://xmlns.com/foaf/0.1/name> "Bob Smith" .
+<http://example.org/person2> <http://xmlns.com/foaf/0.1/age> "25"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/person2> <http://schema.org/birthDate> "1998-12-03"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://example.org/person2> <http://xmlns.com/foaf/0.1/mbox> <mailto:bob@example.org> .
+<http://example.org/person2> <http://xmlns.com/foaf/0.1/knows> <http://example.org/person1> .
+
+# Person 3 - Carol Williams (Author)
+<http://example.org/person3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://example.org/person3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Author> .
+<http://example.org/person3> <http://xmlns.com/foaf/0.1/name> "Carol Williams" .
+<http://example.org/person3> <http://xmlns.com/foaf/0.1/age> "35"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/person3> <http://schema.org/birthDate> "1988-08-22"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://example.org/person3> <http://xmlns.com/foaf/0.1/homepage> <http://carol.example.org> .
+<http://example.org/person3> <http://xmlns.com/foaf/0.1/mbox> <mailto:carol@example.org> .
+<http://example.org/person3> <http://schema.org/author> <http://example.org/book1> .
+<http://example.org/person3> <http://schema.org/author> <http://example.org/article1> .
+
+# Company
+<http://example.org/company1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Organization> .
+<http://example.org/company1> <http://xmlns.com/foaf/0.1/name> "Tech Solutions Inc." .
+<http://example.org/company1> <http://schema.org/address> _:address1 .
+_:address1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/PostalAddress> .
+_:address1 <http://schema.org/streetAddress> "123 Main Street" .
+_:address1 <http://schema.org/addressLocality> "Springfield" .
+_:address1 <http://schema.org/addressRegion> "IL" .
+_:address1 <http://schema.org/postalCode> "62701" .
+_:address1 <http://schema.org/addressCountry> "US" .
+
+# Publisher
+<http://example.org/publisher1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Organization> .
+<http://example.org/publisher1> <http://xmlns.com/foaf/0.1/name> "Academic Press" .
+
+# Book
+<http://example.org/book1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Book> .
+<http://example.org/book1> <http://purl.org/dc/terms/title> "Advanced RDF Processing" .
+<http://example.org/book1> <http://purl.org/dc/terms/description> "A comprehensive guide to RDF data processing and semantic web technologies." .
+<http://example.org/book1> <http://schema.org/author> <http://example.org/person3> .
+<http://example.org/book1> <http://schema.org/publisher> <http://example.org/publisher1> .
+<http://example.org/book1> <http://schema.org/isbn> "978-0123456789" .
+<http://example.org/book1> <http://schema.org/price> "49.99"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+<http://example.org/book1> <http://purl.org/dc/terms/created> "2023-03-15T10:30:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/book1> <http://schema.org/numberOfPages> "350"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+# Article
+<http://example.org/article1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Article> .
+<http://example.org/article1> <http://purl.org/dc/terms/title> "Semantic Web Best Practices" .
+<http://example.org/article1> <http://purl.org/dc/terms/description> "An article discussing best practices in semantic web development." .
+<http://example.org/article1> <http://schema.org/author> <http://example.org/person3> .
+<http://example.org/article1> <http://purl.org/dc/terms/created> "2023-01-20T14:45:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/article1> <http://schema.org/wordCount> "2500"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/article1> <http://schema.org/keywords> "semantic web" .
+<http://example.org/article1> <http://schema.org/keywords> "RDF" .
+<http://example.org/article1> <http://schema.org/keywords> "linked data" .
+<http://example.org/article1> <http://schema.org/keywords> "ontology" .
+
+# Dataset
+<http://example.org/dataset1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Dataset> .
+<http://example.org/dataset1> <http://purl.org/dc/terms/title> "Sample Research Data" .
+<http://example.org/dataset1> <http://purl.org/dc/terms/description> "A dataset containing research measurements and observations." .
+<http://example.org/dataset1> <http://purl.org/dc/terms/created> "2023-02-10T09:15:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/dataset1> <http://schema.org/creator> <http://example.org/person1> .
+<http://example.org/dataset1> <http://schema.org/distribution> _:distribution1 .
+_:distribution1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/DataDownload> .
+_:distribution1 <http://schema.org/encodingFormat> "text/csv" .
+_:distribution1 <http://schema.org/contentUrl> <http://example.org/data/sample.csv> .
+<http://example.org/dataset1> <http://schema.org/measurementTechnique> "Statistical Analysis" .
+<http://example.org/dataset1> <http://schema.org/variableMeasured> "temperature" .
+<http://example.org/dataset1> <http://schema.org/variableMeasured> "humidity" .
+<http://example.org/dataset1> <http://schema.org/variableMeasured> "pressure" .
+
+# Collections
+<http://example.org/collection1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> .
+<http://example.org/collection1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> "First item" .
+<http://example.org/collection1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> "Second item" .
+<http://example.org/collection1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_3> "Third item" .
+
+<http://example.org/sequence1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> .
+<http://example.org/sequence1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> <http://example.org/person1> .
+<http://example.org/sequence1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> <http://example.org/person2> .
+<http://example.org/sequence1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_3> <http://example.org/person3> .
+
+# Blank node
+_:anonymous1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+_:anonymous1 <http://xmlns.com/foaf/0.1/name> "Anonymous User" .
+_:anonymous1 <http://xmlns.com/foaf/0.1/age> "28"^^<http://www.w3.org/2001/XMLSchema#integer> .
+_:anonymous1 <http://xmlns.com/foaf/0.1/knows> <http://example.org/person1> .
+_:anonymous1 <http://www.w3.org/2000/01/rdf-schema#comment> "This is a blank node example for testing purposes." .
+
+# Multi-language literals
+<http://example.org/multilingual> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/CreativeWork> .
+<http://example.org/multilingual> <http://purl.org/dc/terms/title> "Hello World"@en .
+<http://example.org/multilingual> <http://purl.org/dc/terms/title> "Hola Mundo"@es .
+<http://example.org/multilingual> <http://purl.org/dc/terms/title> "Bonjour le Monde"@fr .
+<http://example.org/multilingual> <http://purl.org/dc/terms/title> "Hallo Welt"@de .
+<http://example.org/multilingual> <http://purl.org/dc/terms/description> "A simple greeting in multiple languages"@en .
+
+# Numeric and boolean literals
+<http://example.org/measurements> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/DataPoint> .
+<http://example.org/measurements> <http://example.org/temperature> "23.5"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://example.org/measurements> <http://example.org/humidity> "65.2"^^<http://www.w3.org/2001/XMLSchema#double> .
+<http://example.org/measurements> <http://example.org/pressure> "1013"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/measurements> <http://example.org/isActive> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .
+<http://example.org/measurements> <http://example.org/timestamp> "2023-06-15T14:30:00.123Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/measurements> <http://example.org/duration> "PT2H30M"^^<http://www.w3.org/2001/XMLSchema#duration> .
+
+# Complex nested structure
+<http://example.org/project1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Project> .
+<http://example.org/project1> <http://purl.org/dc/terms/title> "Semantic Web Research Project" .
+<http://example.org/project1> <http://schema.org/member> <http://example.org/person1> .
+<http://example.org/project1> <http://schema.org/member> <http://example.org/person2> .
+<http://example.org/project1> <http://schema.org/member> <http://example.org/person3> .
+<http://example.org/project1> <http://schema.org/startDate> "2023-01-01"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://example.org/project1> <http://schema.org/endDate> "2023-12-31"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://example.org/project1> <http://schema.org/funding> _:funding1 .
+_:funding1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Grant> .
+_:funding1 <http://schema.org/funder> _:funder1 .
+_:funder1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schema.org/Organization> .
+_:funder1 <http://xmlns.com/foaf/0.1/name> "Research Foundation" .
+_:funding1 <http://schema.org/amount> "100000"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+_:funding1 <http://schema.org/currency> "USD" .
+<http://example.org/project1> <http://schema.org/result> <http://example.org/book1> .
+<http://example.org/project1> <http://schema.org/result> <http://example.org/article1> .
+<http://example.org/project1> <http://schema.org/result> <http://example.org/dataset1> .

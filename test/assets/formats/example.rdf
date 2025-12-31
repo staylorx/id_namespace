@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:dc="http://purl.org/dc/terms/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:schema="http://schema.org/"
+    xmlns:ex="http://example.org/">
+
+    <!-- Person 1 - Alice Johnson -->
+    <foaf:Person rdf:about="http://example.org/person1">
+        <foaf:name>Alice Johnson</foaf:name>
+        <foaf:age rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">30</foaf:age>
+        <schema:birthDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1993-05-15</schema:birthDate>
+        <foaf:homepage rdf:resource="http://alice.example.org" />
+        <foaf:mbox rdf:resource="mailto:alice@example.org" />
+        <foaf:knows rdf:resource="http://example.org/person2" />
+        <foaf:knows rdf:resource="http://example.org/person3" />
+        <schema:worksFor rdf:resource="http://example.org/company1" />
+    </foaf:Person>
+
+    <!-- Person 2 - Bob Smith -->
+    <foaf:Person rdf:about="http://example.org/person2">
+        <foaf:name>Bob Smith</foaf:name>
+        <foaf:age rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">25</foaf:age>
+        <schema:birthDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1998-12-03</schema:birthDate>
+        <foaf:mbox rdf:resource="mailto:bob@example.org" />
+        <foaf:knows rdf:resource="http://example.org/person1" />
+    </foaf:Person>
+
+    <!-- Person 3 - Carol Williams (Author) -->
+    <rdf:Description rdf:about="http://example.org/person3">
+        <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person" />
+        <rdf:type rdf:resource="http://schema.org/Author" />
+        <foaf:name>Carol Williams</foaf:name>
+        <foaf:age rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">35</foaf:age>
+        <schema:birthDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1988-08-22</schema:birthDate>
+        <foaf:homepage rdf:resource="http://carol.example.org" />
+        <foaf:mbox rdf:resource="mailto:carol@example.org" />
+        <schema:author rdf:resource="http://example.org/book1" />
+        <schema:author rdf:resource="http://example.org/article1" />
+    </rdf:Description>
+
+    <!-- Company -->
+    <schema:Organization rdf:about="http://example.org/company1">
+        <foaf:name>Tech Solutions Inc.</foaf:name>
+        <schema:address>
+            <schema:PostalAddress>
+                <schema:streetAddress>123 Main Street</schema:streetAddress>
+                <schema:addressLocality>Springfield</schema:addressLocality>
+                <schema:addressRegion>IL</schema:addressRegion>
+                <schema:postalCode>62701</schema:postalCode>
+                <schema:addressCountry>US</schema:addressCountry>
+            </schema:PostalAddress>
+        </schema:address>
+    </schema:Organization>
+
+    <!-- Publisher -->
+    <schema:Organization rdf:about="http://example.org/publisher1">
+        <foaf:name>Academic Press</foaf:name>
+    </schema:Organization>
+
+    <!-- Book -->
+    <schema:Book rdf:about="http://example.org/book1">
+        <dc:title>Advanced RDF Processing</dc:title>
+        <dc:description>A comprehensive guide to RDF data processing and semantic web technologies.</dc:description>
+        <schema:author rdf:resource="http://example.org/person3" />
+        <schema:publisher rdf:resource="http://example.org/publisher1" />
+        <schema:isbn>978-0123456789</schema:isbn>
+        <schema:price rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">49.99</schema:price>
+        <dc:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-03-15T10:30:00Z</dc:created>
+        <schema:numberOfPages rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">350</schema:numberOfPages>
+    </schema:Book>
+
+    <!-- Article -->
+    <schema:Article rdf:about="http://example.org/article1">
+        <dc:title>Semantic Web Best Practices</dc:title>
+        <dc:description>An article discussing best practices in semantic web development.</dc:description>
+        <schema:author rdf:resource="http://example.org/person3" />
+        <dc:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-01-20T14:45:00Z</dc:created>
+        <schema:wordCount rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2500</schema:wordCount>
+        <schema:keywords>semantic web</schema:keywords>
+        <schema:keywords>RDF</schema:keywords>
+        <schema:keywords>linked data</schema:keywords>
+        <schema:keywords>ontology</schema:keywords>
+    </schema:Article>
+
+    <!-- Dataset -->
+    <schema:Dataset rdf:about="http://example.org/dataset1">
+        <dc:title>Sample Research Data</dc:title>
+        <dc:description>A dataset containing research measurements and observations.</dc:description>
+        <dc:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-02-10T09:15:00Z</dc:created>
+        <schema:creator rdf:resource="http://example.org/person1" />
+        <schema:distribution>
+            <schema:DataDownload>
+                <schema:encodingFormat>text/csv</schema:encodingFormat>
+                <schema:contentUrl rdf:resource="http://example.org/data/sample.csv" />
+            </schema:DataDownload>
+        </schema:distribution>
+        <schema:measurementTechnique>Statistical Analysis</schema:measurementTechnique>
+        <schema:variableMeasured>temperature</schema:variableMeasured>
+        <schema:variableMeasured>humidity</schema:variableMeasured>
+        <schema:variableMeasured>pressure</schema:variableMeasured>
+    </schema:Dataset>
+
+    <!-- Collections -->
+    <rdf:Bag rdf:about="http://example.org/collection1">
+        <rdf:_1>First item</rdf:_1>
+        <rdf:_2>Second item</rdf:_2>
+        <rdf:_3>Third item</rdf:_3>
+    </rdf:Bag>
+
+    <rdf:Seq rdf:about="http://example.org/sequence1">
+        <rdf:_1 rdf:resource="http://example.org/person1" />
+        <rdf:_2 rdf:resource="http://example.org/person2" />
+        <rdf:_3 rdf:resource="http://example.org/person3" />
+    </rdf:Seq>
+
+    <!-- Blank node -->
+    <foaf:Person>
+        <foaf:name>Anonymous User</foaf:name>
+        <foaf:age rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">28</foaf:age>
+        <foaf:knows rdf:resource="http://example.org/person1" />
+        <rdfs:comment>This is a blank node example for testing purposes.</rdfs:comment>
+    </foaf:Person>
+
+    <!-- Multi-language literals -->
+    <schema:CreativeWork rdf:about="http://example.org/multilingual">
+        <dc:title xml:lang="en">Hello World</dc:title>
+        <dc:title xml:lang="es">Hola Mundo</dc:title>
+        <dc:title xml:lang="fr">Bonjour le Monde</dc:title>
+        <dc:title xml:lang="de">Hallo Welt</dc:title>
+        <dc:description xml:lang="en">A simple greeting in multiple languages</dc:description>
+    </schema:CreativeWork>
+
+    <!-- Numeric and boolean literals -->
+    <ex:DataPoint rdf:about="http://example.org/measurements">
+        <ex:temperature rdf:datatype="http://www.w3.org/2001/XMLSchema#float">23.5</ex:temperature>
+        <ex:humidity rdf:datatype="http://www.w3.org/2001/XMLSchema#double">65.2</ex:humidity>
+        <ex:pressure rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1013</ex:pressure>
+        <ex:isActive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ex:isActive>
+        <ex:timestamp rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
+            2023-06-15T14:30:00.123Z</ex:timestamp>
+        <ex:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">PT2H30M</ex:duration>
+    </ex:DataPoint>
+
+    <!-- Complex nested structure -->
+    <schema:Project rdf:about="http://example.org/project1">
+        <dc:title>Semantic Web Research Project</dc:title>
+        <schema:member rdf:resource="http://example.org/person1" />
+        <schema:member rdf:resource="http://example.org/person2" />
+        <schema:member rdf:resource="http://example.org/person3" />
+        <schema:startDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-01-01</schema:startDate>
+        <schema:endDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-12-31</schema:endDate>
+        <schema:funding>
+            <schema:Grant>
+                <schema:funder>
+                    <schema:Organization>
+                        <foaf:name>Research Foundation</foaf:name>
+                    </schema:Organization>
+                </schema:funder>
+                <schema:amount rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">100000</schema:amount>
+                <schema:currency>USD</schema:currency>
+            </schema:Grant>
+        </schema:funding>
+        <schema:result rdf:resource="http://example.org/book1" />
+        <schema:result rdf:resource="http://example.org/article1" />
+        <schema:result rdf:resource="http://example.org/dataset1" />
+    </schema:Project>
+
+</rdf:RDF>
