@@ -1,0 +1,22 @@
+name: id_namespace
+description: A Dart package providing an registry for id_pair_sets.
+version: 1.0.1
+repository: https://github.com/staylorx/id_namespace
+issue_tracker: https://github.com/staylorx/id_namespace/issues
+documentation: https://github.com/staylorx/id_namespace
+
+environment:
+  sdk: ^3.10.0
+
+# Add regular dependencies here.
+dependencies:
+  equatable: ^2.0.7
+  fpdart: ^1.2.0
+  id_pair_set: ^1.2.1
+  rdf_core: ^0.9.24
+  uuid: ^4.5.2
+
+dev_dependencies:
+  lints: ^6.0.0
+  path: ^1.9.1
+  test: ^1.25.6
