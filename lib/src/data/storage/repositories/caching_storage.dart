@@ -20,28 +20,22 @@ class CachedIdStorage implements IdStorage {
   @override
   Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
     final result = await _storage.add(namespace: namespace);
-    return result.fold(
-      (failure) => Left(failure),
-      (_) {
-        // Update cache on success
-        final codes = _cache.putIfAbsent(namespace.uri.toString(), () => {});
-        codes.add(namespace.prefix);
-        return Right(unit);
-      },
-    );
+    return result.fold((failure) => Left(failure), (_) {
+      // Update cache on success
+      final codes = _cache.putIfAbsent(namespace.uri.toString(), () => {});
+      codes.add(namespace.prefix);
+      return Right(unit);
+    });
   }
 
   @override
   Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
     final result = await _storage.remove(namespace: namespace);
-    return result.fold(
-      (failure) => Left(failure),
-      (_) {
-        // Update cache on success
-        _cache[namespace.uri.toString()]?.remove(namespace.prefix);
-        return Right(unit);
-      },
-    );
+    return result.fold((failure) => Left(failure), (_) {
+      // Update cache on success
+      _cache[namespace.uri.toString()]?.remove(namespace.prefix);
+      return Right(unit);
+    });
   }
 
   @override
@@ -53,13 +47,10 @@ class CachedIdStorage implements IdStorage {
     } else {
       // Fetch from storage and cache
       final codesResult = await _storage.getIdCodesForUri(namespace.uri);
-      return codesResult.fold(
-        (failure) => Left(failure),
-        (codes) {
-          _cache[uriKey] = codes;
-          return Right(codes.contains(namespace.prefix));
-        },
-      );
+      return codesResult.fold((failure) => Left(failure), (codes) {
+        _cache[uriKey] = codes;
+        return Right(codes.contains(namespace.prefix));
+      });
     }
   }
 
@@ -78,26 +69,20 @@ class CachedIdStorage implements IdStorage {
     } else {
       // Fetch from storage and cache
       final codesResult = await _storage.getIdCodesForUri(uri);
-      return codesResult.fold(
-        (failure) => Left(failure),
-        (codes) {
-          _cache[uriKey] = codes;
-          return Right(codes);
-        },
-      );
+      return codesResult.fold((failure) => Left(failure), (codes) {
+        _cache[uriKey] = codes;
+        return Right(codes);
+      });
     }
   }
 
   @override
   Future<Either<Failure, Unit>> clear() async {
     final result = await _storage.clear();
-    return result.fold(
-      (failure) => Left(failure),
-      (_) {
-        // Clear cache on success
-        _cache.clear();
-        return Right(unit);
-      },
-    );
+    return result.fold((failure) => Left(failure), (_) {
+      // Clear cache on success
+      _cache.clear();
+      return Right(unit);
+    });
   }
 }

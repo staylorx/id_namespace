@@ -91,10 +91,11 @@ class FileBasedIdStorage implements IdStorage {
   @override
   Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
     final loadResult = await _loadFromFile();
-    if (loadResult.isLeft())
+    if (loadResult.isLeft()) {
       return Left(
         loadResult.getLeft().getOrElse(() => StorageFailure('Unknown error')),
       );
+    }
 
     return Right(
       (_data['ids'] as Map<String, Set<String>>)[namespace.uri.toString()]
@@ -106,10 +107,11 @@ class FileBasedIdStorage implements IdStorage {
   @override
   Future<Either<Failure, Set<String>>> getAllUris() async {
     final loadResult = await _loadFromFile();
-    if (loadResult.isLeft())
+    if (loadResult.isLeft()) {
       return Left(
         loadResult.getLeft().getOrElse(() => StorageFailure('Unknown error')),
       );
+    }
 
     return Right(Set.from((_data['ids'] as Map<String, Set<String>>).keys));
   }
@@ -117,10 +119,11 @@ class FileBasedIdStorage implements IdStorage {
   @override
   Future<Either<Failure, Set<String>>> getIdCodesForUri(Uri uri) async {
     final loadResult = await _loadFromFile();
-    if (loadResult.isLeft())
+    if (loadResult.isLeft()) {
       return Left(
         loadResult.getLeft().getOrElse(() => StorageFailure('Unknown error')),
       );
+    }
 
     return Right(
       (_data['ids'] as Map<String, Set<String>>)[uri.toString()] ?? {},

@@ -30,7 +30,9 @@ class InMemoryIdStorage implements IdStorage {
 
   @override
   Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
-    return Right(_data[namespace.uri.toString()]?.contains(namespace.prefix) ?? false);
+    return Right(
+      _data[namespace.uri.toString()]?.contains(namespace.prefix) ?? false,
+    );
   }
 
   @override

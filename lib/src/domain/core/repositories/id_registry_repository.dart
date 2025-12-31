@@ -19,8 +19,12 @@ abstract class IdRegistryRepository {
   Future<Either<Failure, bool>> isRegistered({required Namespace namespace});
 
   /// Returns all registered idCodes for a given uri.
-  Future<Either<Failure, Set<Namespace>>> getNamespaceByPrefix({required String prefix});
-  Future<Either<Failure, Set<Namespace>>> getNamespaceByCode({required String code});
+  Future<Either<Failure, Set<Namespace>>> getNamespaceByPrefix({
+    required String prefix,
+  });
+  Future<Either<Failure, Set<Namespace>>> getNamespaceByCode({
+    required String code,
+  });
 
   /// Returns all idTypes that are currently registered in the registry.
   ///
