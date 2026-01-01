@@ -13,11 +13,13 @@ class FetchContentServiceImpl implements FetchContentService {
     try {
       final uri = Uri.parse(url);
       if (uri.scheme == 'file') {
-        final file = File(uri.toFilePath());
+        final filePath = uri.toFilePath();
+        final file = File(filePath);
         final content = await file.readAsString();
         return Right(content);
       } else {
         final dio = Dio();
+        dio.options.receiveTimeout = Duration(seconds: 30);
         final response = await dio.get(url);
         if (response.statusCode != 200) {
           return Left(
