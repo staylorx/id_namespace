@@ -10,7 +10,7 @@ class GetNamespaceByCodeUsecase {
 
   GetNamespaceByCodeUsecase({required this.repository});
 
-  Future<Either<Failure, Set<Namespace>>> execute({
+  Future<Either<Failure, Namespace>> execute({
     required String code,
   }) async {
     return await repository.getNamespaceByCode(code: code);

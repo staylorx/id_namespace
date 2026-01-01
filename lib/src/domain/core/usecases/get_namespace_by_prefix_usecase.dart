@@ -10,7 +10,7 @@ class GetNamespaceByPrefixUsecase {
 
   GetNamespaceByPrefixUsecase({required this.repository});
 
-  Future<Either<Failure, Set<Namespace>>> execute({
+  Future<Either<Failure, Namespace>> execute({
     required String prefix,
   }) async {
     return await repository.getNamespaceByPrefix(prefix: prefix);

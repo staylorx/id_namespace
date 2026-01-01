@@ -44,9 +44,7 @@ void main() {
       code: ontology['code']!,
     );
     expect(getResult.isRight(), isTrue);
-    final namespaces = getResult.getRight().getOrElse(() => {});
-    expect(namespaces.length, 1);
-    final namespace = namespaces.first;
+    final namespace = getResult.getRight().getOrElse(() => throw Exception('Should be right'));
     expect(namespace.prefix, ontology['code']);
     expect(namespace.uri.toString(), ontology['downloadURL']);
 

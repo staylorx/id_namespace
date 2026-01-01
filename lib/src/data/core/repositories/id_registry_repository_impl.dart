@@ -39,33 +39,41 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
     return await storage.contains(dto);
   }
 
-  /// Returns namespaces by prefix.
+  /// Returns namespace by prefix.
   @override
-  Future<Either<Failure, Set<Namespace>>> getNamespaceByPrefix({
+  Future<Either<Failure, Namespace>> getNamespaceByPrefix({
     required String prefix,
   }) async {
     final allResult = await getAll();
     return allResult.fold(
       (failure) => Left(failure),
-      (allNamespaces) => Right(
-        allNamespaces
-            .where((namespace) => namespace.prefix.startsWith(prefix))
-            .toSet(),
-      ),
+      (allNamespaces) {
+        try {
+          final namespace = allNamespaces.firstWhere((ns) => ns.prefix == prefix);
+          return Right(namespace);
+        } catch (e) {
+          return Left(NotFoundFailure('Namespace with prefix $prefix not found'));
+        }
+      },
     );
   }
 
-  /// Returns namespaces by code.
+  /// Returns namespace by code.
   @override
-  Future<Either<Failure, Set<Namespace>>> getNamespaceByCode({
+  Future<Either<Failure, Namespace>> getNamespaceByCode({
     required String code,
   }) async {
     final allResult = await getAll();
     return allResult.fold(
       (failure) => Left(failure),
-      (allNamespaces) => Right(
-        allNamespaces.where((namespace) => namespace.prefix == code).toSet(),
-      ),
+      (allNamespaces) {
+        try {
+          final namespace = allNamespaces.firstWhere((ns) => ns.prefix == code);
+          return Right(namespace);
+        } catch (e) {
+          return Left(NotFoundFailure('Namespace with code $code not found'));
+        }
+      },
     );
   }
 

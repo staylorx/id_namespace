@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:rdf_core/rdf_core.dart';
 
 import '../../../domain/core/value_objects/namespace.dart';
-import '../serializers/rdf_graph_serializer.dart';
 
 /// Data Transfer Object for Namespace entity, used for serialization and storage.
 ///
@@ -49,7 +49,7 @@ class NamespaceDto with EquatableMixin {
       uri: Uri.parse(uri),
       prefix: prefix,
       description: description,
-      rdfGraph: RdfGraphSerializer.deserialize(rdfGraph),
+      rdfGraph: _deserializeRdfGraph(rdfGraph),
     );
   }
 
@@ -59,7 +59,35 @@ class NamespaceDto with EquatableMixin {
       uri: namespace.uri.toString(),
       prefix: namespace.prefix,
       description: namespace.description,
-      rdfGraph: RdfGraphSerializer.serialize(namespace.rdfGraph),
+      rdfGraph: _serializeRdfGraph(namespace.rdfGraph),
     );
+  }
+
+  /// Deserializes a Turtle-formatted String to an RdfGraph.
+  ///
+  /// Returns null if the data is null or deserialization fails.
+  static RdfGraph? _deserializeRdfGraph(String? data) {
+    if (data == null) return null;
+
+    try {
+      return rdf.decode(data, contentType: 'text/turtle');
+    } catch (e) {
+      // Return null on deserialization failure
+      return null;
+    }
+  }
+
+  /// Serializes an RdfGraph to a Turtle-formatted String.
+  ///
+  /// Returns null if the graph is null or serialization fails.
+  static String? _serializeRdfGraph(RdfGraph? graph) {
+    if (graph == null) return null;
+
+    try {
+      return rdf.encode(graph, contentType: 'text/turtle');
+    } catch (e) {
+      // Return null on serialization failure
+      return null;
+    }
   }
 }

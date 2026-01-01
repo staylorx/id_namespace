@@ -58,3 +58,13 @@ class ParseFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+/// Failure when a namespace is not found.
+class NotFoundFailure extends Failure {
+  final String message;
+
+  const NotFoundFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

@@ -18,11 +18,11 @@ abstract class IdRegistryRepository {
   /// Checks if a specific uri and idCode combination is already registered.
   Future<Either<Failure, bool>> isRegistered({required Namespace namespace});
 
-  /// Returns all registered idCodes for a given uri.
-  Future<Either<Failure, Set<Namespace>>> getNamespaceByPrefix({
+  /// Returns the registered namespace for a given prefix.
+  Future<Either<Failure, Namespace>> getNamespaceByPrefix({
     required String prefix,
   });
-  Future<Either<Failure, Set<Namespace>>> getNamespaceByCode({
+  Future<Either<Failure, Namespace>> getNamespaceByCode({
     required String code,
   });
 
