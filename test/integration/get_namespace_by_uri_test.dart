@@ -3,7 +3,7 @@ import 'package:id_namespace/src/data/core/repositories/id_registry_repository_i
 import 'package:id_namespace/src/data/storage/repositories/in_memory_id_storage.dart';
 import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
 import 'package:id_namespace/src/domain/core/usecases/add_namespace_usecase.dart';
-import 'package:id_namespace/src/domain/core/usecases/get_namespace_by_code_usecase.dart';
+import 'package:id_namespace/src/domain/core/usecases/get_namespace_by_uri_usecase.dart';
 import 'package:id_namespace/src/domain/core/value_objects/namespace.dart';
 import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
 import 'package:id_namespace/src/utils/failures.dart';
@@ -13,13 +13,13 @@ void main() {
   late IdStorage storage;
   late IdRegistryRepository repository;
   late AddNamespaceUsecase addUsecase;
-  late GetNamespaceByCodeUsecase getUsecase;
+  late GetNamespaceByUriUsecase getUsecase;
 
   setUp(() {
     storage = InMemoryIdStorage();
     repository = IdRegistryRepositoryImpl(storage: storage);
     addUsecase = AddNamespaceUsecase(repository: repository);
-    getUsecase = GetNamespaceByCodeUsecase(repository: repository);
+    getUsecase = GetNamespaceByUriUsecase(repository: repository);
   });
 
   test('should retrieve namespace by code successfully', () async {
@@ -35,7 +35,9 @@ void main() {
     expect(addResult.isRight(), isTrue);
 
     // When
-    final result = await getUsecase.execute(code: 'ex');
+    final result = await getUsecase.execute(
+      uri: Uri.parse('http://example.com/ns#'),
+    );
 
     // Then
     expect(result.isRight(), isTrue);
@@ -49,7 +51,7 @@ void main() {
 
   test('should return NotFoundFailure when code not found', () async {
     // When
-    final result = await getUsecase.execute(code: 'nonexistent');
+    final result = await getUsecase.execute(uri: Uri.parse('nonexistent'));
 
     // Then
     expect(result.isLeft(), isTrue);

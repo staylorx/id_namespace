@@ -48,16 +48,16 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
 
   /// Returns namespace by code.
   @override
-  Future<Either<Failure, Namespace>> getNamespaceByCode({
-    required String code,
+  Future<Either<Failure, Namespace>> getNamespaceByUri({
+    required Uri uri,
   }) async {
     final allResult = await getAll();
     return allResult.fold((failure) => Left(failure), (allNamespaces) {
       try {
-        final namespace = allNamespaces.firstWhere((ns) => ns.prefix == code);
+        final namespace = allNamespaces.firstWhere((ns) => ns.uri == uri);
         return Right(namespace);
       } catch (e) {
-        return Left(NotFoundFailure('Namespace with code $code not found'));
+        return Left(NotFoundFailure('Namespace with uri $uri not found'));
       }
     });
   }

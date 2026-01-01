@@ -61,8 +61,8 @@ void main() {
     expect(result.isRight(), isTrue);
 
     // Verify the ontology is registered
-    final getResult = await repository.getNamespaceByCode(
-      code: ontology['code']!,
+    final getResult = await repository.getNamespaceByUri(
+      uri: Uri.parse(ontology['code']!),
     );
     expect(getResult.isRight(), isTrue);
     final namespace = getResult.getRight().getOrElse(
@@ -106,8 +106,8 @@ void main() {
     expect(result.isRight(), isTrue);
 
     // Verify the ontology is registered
-    final getResult = await repository.getNamespaceByCode(
-      code: ontology['code']!,
+    final getResult = await repository.getNamespaceByUri(
+      uri: Uri.parse(ontology['code']!),
     );
     expect(getResult.isRight(), isTrue);
     final namespace = getResult.getRight().getOrElse(
