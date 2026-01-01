@@ -9,7 +9,10 @@ import '../../../utils/failures.dart';
 
 /// Implementation of FetchContentService using Dio for HTTP and File for local files.
 class FetchContentServiceImpl implements FetchContentService {
+  final Dio _dio;
   final _logger = Logging.getLogger('FetchContentServiceImpl');
+
+  FetchContentServiceImpl({Dio? dio}) : _dio = dio ?? Dio();
 
   @override
   Future<Either<Failure, String>> fetchContent({required String url}) async {
@@ -29,9 +32,8 @@ class FetchContentServiceImpl implements FetchContentService {
         return Right(content);
       } else {
         _logger.info('Detected HTTP scheme, making GET request to: $url');
-        final dio = Dio();
-        dio.options.receiveTimeout = Duration(seconds: 30);
-        final response = await dio.get(url);
+        _dio.options.receiveTimeout = Duration(seconds: 30);
+        final response = await _dio.get(url);
         if (response.statusCode != 200) {
           final errorMsg =
               'Failed to fetch content from $url: HTTP ${response.statusCode}';

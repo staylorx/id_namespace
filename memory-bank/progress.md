@@ -8,3 +8,7 @@ This file tracks the project's progress...
 ## Tidy Completion
 
 [2026-01-01 03:08:00] - Completed comprehensive code tidy: fixed parameter naming to use named parameters always, added dartdoc comments to public methods, replaced print with logging in tests, ensured clean architecture, fpdart usage, no Dart in non-code files, formatted codebase, and verified no errors/warnings.
+
+[2026-01-01 04:07:24] - [2026-01-01 21:07:01] - Test coverage analysis: Overall 71% (223/316 lines). Untested files: caching_storage.dart (0/30), namespace_registry.dart (0/3). Recommendations: Add unit tests for untested storage and entities, edge cases in file-based storage, integration tests for ontology loading, error handling tests for service failures.
+
+[2026-01-01 04:11:50] - Completed adding comprehensive unit tests for all untested storage repositories and entities. Created tests for in_memory_id_storage.dart (8 tests), caching_storage.dart (11 tests), file_based_id_storage.dart (11 tests including edge cases), namespace_registry.dart (5 tests), and namespace.dart (8 tests). All tests pass and cover functionality, error cases, and edge cases like invalid JSON for file-based storage.
