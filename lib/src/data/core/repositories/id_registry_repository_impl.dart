@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:rdf_core/rdf_core.dart';
 
 import 'package:id_namespace/src/utils/failures.dart';
 import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
 import 'package:id_namespace/src/domain/core/value_objects/namespace.dart';
 import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
+import 'package:id_namespace/src/data/core/models/namespace_dto.dart';
 
 /// Implementation of IdRegistryRepository using IdStorage.
 class IdRegistryRepositoryImpl implements IdRegistryRepository {
@@ -14,13 +19,15 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   /// Registers the namespace.
   @override
   Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
-    return await storage.add(namespace: namespace);
+    final dto = NamespaceDto.fromEntity(namespace);
+    return await storage.add(dto);
   }
 
   /// Unregisters the namespace.
   @override
   Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
-    return await storage.remove(namespace: namespace);
+    final dto = NamespaceDto.fromEntity(namespace);
+    return await storage.remove(dto);
   }
 
   /// Checks if the namespace is registered.
@@ -28,7 +35,8 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   Future<Either<Failure, bool>> isRegistered({
     required Namespace namespace,
   }) async {
-    return await storage.contains(namespace: namespace);
+    final dto = NamespaceDto.fromEntity(namespace);
+    return await storage.contains(dto);
   }
 
   /// Returns namespaces by prefix.
@@ -64,28 +72,96 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   /// Returns all registered namespaces.
   @override
   Future<Either<Failure, Set<Namespace>>> getAll() async {
-    final urisResult = await storage.getAllUris();
-    if (urisResult.isLeft()) {
-      return Left(
-        urisResult.getLeft().getOrElse(() => StorageFailure('Unknown error')),
-      );
-    }
-    final uris = urisResult.getRight().getOrElse(() => {});
-    final Set<Namespace> result = {};
-    for (final uriStr in uris) {
-      final uri = Uri.parse(uriStr);
-      final codesResult = await storage.getIdCodesForUri(uri: uri);
-      final codes = codesResult.getOrElse((failure) => {});
-      for (final idCode in codes) {
-        result.add(Namespace(uri: uri, prefix: idCode));
-      }
-    }
-    return Right(result);
+    final dtosResult = await storage.getAll();
+    return dtosResult.fold(
+      (failure) => Left(failure),
+      (dtos) => Right(dtos.map((dto) => dto.toEntity()).toSet()),
+    );
   }
 
   /// Clears all registrations.
   @override
   Future<Either<Failure, Unit>> clear() async {
     return await storage.clear();
+  }
+
+  /// Fetches an ontology file from the internet and registers it.
+  @override
+  Future<Either<Failure, Unit>> fetchAndRegisterOntology({
+    required String url,
+    required String prefix,
+    String? description,
+  }) async {
+    try {
+      final uri = Uri.parse(url);
+      final String content;
+      if (uri.scheme == 'file') {
+        final file = File(uri.toFilePath());
+        content = await file.readAsString();
+      } else {
+        final dio = Dio();
+        final response = await dio.get(url);
+        if (response.statusCode != 200) {
+          return Left(
+            NetworkFailure('Failed to fetch ontology: ${response.statusCode}'),
+          );
+        }
+        content = response.data as String;
+      }
+
+      // Determine format from URL extension
+      final format = _getFormatFromUrl(uri.path);
+
+      // Parse RDF content
+      final RdfGraph rdfGraph = _parseRdfContent(content, format);
+
+      final namespace = Namespace(
+        uri: uri,
+        prefix: prefix,
+        description: description,
+        rdfGraph: rdfGraph,
+      );
+
+      return await add(namespace: namespace);
+    } on DioException catch (e) {
+      return Left(NetworkFailure('Network error: ${e.message}'));
+    } catch (e) {
+      return Left(ParseFailure('Failed to parse RDF: $e'));
+    }
+  }
+
+  String _getFormatFromUrl(String path) {
+    if (path.endsWith('.ttl') || path.endsWith('.turtle')) {
+      return 'turtle';
+    } else if (path.endsWith('.rdf') || path.endsWith('.xml')) {
+      return 'rdfxml';
+    } else if (path.endsWith('.nt')) {
+      return 'ntriples';
+    } else if (path.endsWith('.jsonld')) {
+      return 'jsonld';
+    } else {
+      return 'turtle'; // default
+    }
+  }
+
+  RdfGraph _parseRdfContent(String content, String format) {
+    String contentType;
+    switch (format) {
+      case 'turtle':
+        contentType = 'text/turtle';
+        break;
+      case 'ntriples':
+        contentType = 'application/n-triples';
+        break;
+      case 'jsonld':
+        contentType = 'application/ld+json';
+        break;
+      case 'rdfxml':
+        contentType = 'application/rdf+xml';
+        break;
+      default:
+        contentType = 'text/turtle'; // default to turtle
+    }
+    return rdf.decode(content, contentType: contentType);
   }
 }

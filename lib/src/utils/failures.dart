@@ -38,3 +38,23 @@ class StorageFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+/// Failure for network-related errors.
+class NetworkFailure extends Failure {
+  final String message;
+
+  const NetworkFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+/// Failure for RDF parsing errors.
+class ParseFailure extends Failure {
+  final String message;
+
+  const ParseFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

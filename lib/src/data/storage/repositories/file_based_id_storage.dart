@@ -5,7 +5,7 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../domain/storage/repositories/storage.dart';
 import '../../../utils/failures.dart';
-import '../../../domain/core/value_objects/namespace.dart';
+import '../../../data/core/models/namespace_dto.dart';
 
 /// File-based implementation of AsyncIdStorage that persists data to JSON files asynchronously.
 ///
@@ -13,7 +13,7 @@ import '../../../domain/core/value_objects/namespace.dart';
 /// that saves and loads data from a JSON file on disk using async I/O.
 class FileBasedIdStorage implements IdStorage {
   final String filePath;
-  Map<String, dynamic> _data = {'ids': <String, Set<String>>{}};
+  Set<NamespaceDto> _data = {};
   bool _loaded = false;
 
   /// Creates a file-based async storage with the specified file path.
@@ -29,13 +29,10 @@ class FileBasedIdStorage implements IdStorage {
       if (await file.exists()) {
         final jsonString = await file.readAsString();
         final jsonData = json.decode(jsonString) as Map<String, dynamic>;
-        final ids = jsonData['ids'] as Map<String, dynamic>? ?? {};
-        _data = {
-          'ids': ids.map((key, value) {
-            final codes = value as List<dynamic>;
-            return MapEntry(key, codes.map((e) => e.toString()).toSet());
-          }),
-        };
+        final namespaces = jsonData['namespaces'] as List<dynamic>? ?? [];
+        _data = namespaces
+            .map((e) => NamespaceDto.fromJson(e as Map<String, dynamic>))
+            .toSet();
       }
       _loaded = true;
       return Right(unit);
@@ -48,10 +45,9 @@ class FileBasedIdStorage implements IdStorage {
   Future<Either<Failure, Unit>> _saveToFile() async {
     try {
       final file = File(filePath);
-      final ids = (_data['ids'] as Map<String, Set<String>>).map(
-        (key, value) => MapEntry(key, value.toList()),
-      );
-      final jsonData = {'ids': ids};
+      final jsonData = {
+        'namespaces': _data.map((dto) => dto.toJson()).toList(),
+      };
       final jsonString = json.encode(jsonData);
       await file.writeAsString(jsonString);
       return Right(unit);
@@ -60,41 +56,35 @@ class FileBasedIdStorage implements IdStorage {
     }
   }
 
-  /// Adds the namespace to the storage.
+  /// Adds the namespace DTO to the storage.
   @override
-  Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
+  Future<Either<Failure, Unit>> add(NamespaceDto dto) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) return loadResult;
 
-    final uriKey = namespace.uri.toString();
-    final codes = (_data['ids'] as Map<String, Set<String>>).putIfAbsent(
-      uriKey,
-      () => {},
-    );
-    if (codes.contains(namespace.prefix)) {
+    if (_data.contains(dto)) {
       return Left(
-        DuplicateIdFailure(prefix: namespace.prefix, uri: namespace.uri),
+        DuplicateIdFailure(prefix: dto.prefix, uri: Uri.parse(dto.uri)),
       );
     }
-    codes.add(namespace.prefix);
+    _data.add(dto);
 
     return await _saveToFile();
   }
 
-  /// Removes the namespace from the storage.
+  /// Removes the namespace DTO from the storage.
   @override
-  Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
+  Future<Either<Failure, Unit>> remove(NamespaceDto dto) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) return loadResult;
 
-    (_data['ids'] as Map<String, Set<String>>)[namespace.uri.toString()]
-        ?.remove(namespace.prefix);
+    _data.remove(dto);
     return await _saveToFile();
   }
 
-  /// Checks if the namespace exists in the storage.
+  /// Checks if the namespace DTO exists in the storage.
   @override
-  Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
+  Future<Either<Failure, bool>> contains(NamespaceDto dto) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) {
       return Left(
@@ -102,16 +92,12 @@ class FileBasedIdStorage implements IdStorage {
       );
     }
 
-    return Right(
-      (_data['ids'] as Map<String, Set<String>>)[namespace.uri.toString()]
-              ?.contains(namespace.prefix) ??
-          false,
-    );
+    return Right(_data.contains(dto));
   }
 
-  /// Returns all stored URIs.
+  /// Returns all stored namespace DTOs.
   @override
-  Future<Either<Failure, Set<String>>> getAllUris() async {
+  Future<Either<Failure, Set<NamespaceDto>>> getAll() async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) {
       return Left(
@@ -119,24 +105,7 @@ class FileBasedIdStorage implements IdStorage {
       );
     }
 
-    return Right(Set.from((_data['ids'] as Map<String, Set<String>>).keys));
-  }
-
-  /// Returns all ID codes for the given URI.
-  @override
-  Future<Either<Failure, Set<String>>> getIdCodesForUri({
-    required Uri uri,
-  }) async {
-    final loadResult = await _loadFromFile();
-    if (loadResult.isLeft()) {
-      return Left(
-        loadResult.getLeft().getOrElse(() => StorageFailure('Unknown error')),
-      );
-    }
-
-    return Right(
-      (_data['ids'] as Map<String, Set<String>>)[uri.toString()] ?? {},
-    );
+    return Right(Set.from(_data));
   }
 
   /// Clears all data from the storage.
@@ -145,7 +114,7 @@ class FileBasedIdStorage implements IdStorage {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) return loadResult;
 
-    (_data['ids'] as Map<String, Set<String>>).clear();
+    _data.clear();
     return await _saveToFile();
   }
 }

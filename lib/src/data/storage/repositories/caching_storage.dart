@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 
 import '../../../utils/failures.dart';
-import '../../../domain/core/value_objects/namespace.dart';
+import '../../../data/core/models/namespace_dto.dart';
 import '../../../domain/storage/repositories/storage.dart';
 
 /// Decorator class that adds caching to any AsyncIdStorage implementation.
@@ -12,68 +12,57 @@ class CachedIdStorage implements IdStorage {
   final IdStorage _storage;
   // TODO: Implement cache invalidation strategy if needed
   // TODO: Consider cache size limits for large datasets? Different strategies?
-  final Map<String, Set<String>> _cache = {};
+  Set<NamespaceDto> _cache = {};
+  bool _cacheLoaded = false;
 
   /// Creates a CachedIdStorage that wraps the given [storage].
   CachedIdStorage({required IdStorage storage}) : _storage = storage;
 
   @override
-  Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
-    final result = await _storage.add(namespace: namespace);
+  Future<Either<Failure, Unit>> add(NamespaceDto dto) async {
+    final result = await _storage.add(dto);
     return result.fold((failure) => Left(failure), (_) {
       // Update cache on success
-      final codes = _cache.putIfAbsent(namespace.uri.toString(), () => {});
-      codes.add(namespace.prefix);
+      _cache.add(dto);
+      _cacheLoaded = true;
       return Right(unit);
     });
   }
 
   @override
-  Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
-    final result = await _storage.remove(namespace: namespace);
+  Future<Either<Failure, Unit>> remove(NamespaceDto dto) async {
+    final result = await _storage.remove(dto);
     return result.fold((failure) => Left(failure), (_) {
       // Update cache on success
-      _cache[namespace.uri.toString()]?.remove(namespace.prefix);
+      _cache.remove(dto);
       return Right(unit);
     });
   }
 
   @override
-  Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
-    final uriKey = namespace.uri.toString();
-    // Check cache first
-    if (_cache.containsKey(uriKey)) {
-      return Right(_cache[uriKey]!.contains(namespace.prefix));
+  Future<Either<Failure, bool>> contains(NamespaceDto dto) async {
+    // Check cache first if loaded
+    if (_cacheLoaded) {
+      return Right(_cache.contains(dto));
     } else {
-      // Fetch from storage and cache
-      final codesResult = await _storage.getIdCodesForUri(uri: namespace.uri);
-      return codesResult.fold((failure) => Left(failure), (codes) {
-        _cache[uriKey] = codes;
-        return Right(codes.contains(namespace.prefix));
-      });
+      // Check storage
+      final result = await _storage.contains(dto);
+      return result;
     }
   }
 
   @override
-  Future<Either<Failure, Set<String>>> getAllUris() async {
-    // Delegate to underlying storage - no caching for all uris
-    return await _storage.getAllUris();
-  }
-
-  @override
-  Future<Either<Failure, Set<String>>> getIdCodesForUri({
-    required Uri uri,
-  }) async {
-    final uriKey = uri.toString();
+  Future<Either<Failure, Set<NamespaceDto>>> getAll() async {
     // Check cache first
-    if (_cache.containsKey(uriKey)) {
-      return Right(_cache[uriKey]!);
+    if (_cacheLoaded) {
+      return Right(Set.from(_cache));
     } else {
       // Fetch from storage and cache
-      final codesResult = await _storage.getIdCodesForUri(uri: uri);
-      return codesResult.fold((failure) => Left(failure), (codes) {
-        _cache[uriKey] = codes;
-        return Right(codes);
+      final result = await _storage.getAll();
+      return result.fold((failure) => Left(failure), (dtos) {
+        _cache = Set.from(dtos);
+        _cacheLoaded = true;
+        return Right(dtos);
       });
     }
   }
@@ -84,6 +73,7 @@ class CachedIdStorage implements IdStorage {
     return result.fold((failure) => Left(failure), (_) {
       // Clear cache on success
       _cache.clear();
+      _cacheLoaded = false;
       return Right(unit);
     });
   }

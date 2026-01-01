@@ -33,4 +33,16 @@ abstract class IdRegistryRepository {
 
   /// Clears all registrations (useful for testing or resetting).
   Future<Either<Failure, Unit>> clear();
+
+  /// Fetches an ontology file from the internet and registers it in the namespace registry.
+  ///
+  /// Fetches the content from [url], parses it as RDF, and registers a new namespace
+  /// with the provided [prefix]. The URI is derived from the URL.
+  /// Returns [NetworkFailure] if fetching fails, [ParseFailure] if parsing fails,
+  /// or other failures from registration.
+  Future<Either<Failure, Unit>> fetchAndRegisterOntology({
+    required String url,
+    required String prefix,
+    String? description,
+  });
 }

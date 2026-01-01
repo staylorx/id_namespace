@@ -1,27 +1,25 @@
 import 'package:fpdart/fpdart.dart';
 
 import '../../../utils/failures.dart';
-import '../../core/value_objects/namespace.dart';
+import '../../../data/core/models/namespace_dto.dart';
 
 /// Abstract interface for asynchronous storage of ID registry data.
 ///
 /// This allows different async persistence implementations (in-memory, database, etc.)
 /// to be plugged into async versions of IdRegistry.
+// TODO: Should these use Namespace entities directly instead of DTOs?
 abstract class IdStorage {
-  /// Adds an idCode to the set for the given uri asynchronously.
-  Future<Either<Failure, Unit>> add({required Namespace namespace});
+  /// Adds a namespace DTO asynchronously.
+  Future<Either<Failure, Unit>> add(NamespaceDto dto);
 
-  /// Removes an idCode from the set for the given uri asynchronously.
-  Future<Either<Failure, Unit>> remove({required Namespace namespace});
+  /// Removes a namespace DTO asynchronously.
+  Future<Either<Failure, Unit>> remove(NamespaceDto dto);
 
-  /// Checks if the idCode exists for the given uri asynchronously.
-  Future<Either<Failure, bool>> contains({required Namespace namespace});
+  /// Checks if the namespace DTO exists asynchronously.
+  Future<Either<Failure, bool>> contains(NamespaceDto dto);
 
-  /// Returns all uri keys asynchronously.
-  Future<Either<Failure, Set<String>>> getAllUris();
-
-  /// Returns all idCodes for the given uri asynchronously.
-  Future<Either<Failure, Set<String>>> getIdCodesForUri({required Uri uri});
+  /// Returns all stored namespace DTOs asynchronously.
+  Future<Either<Failure, Set<NamespaceDto>>> getAll();
 
   /// Clears all stored data asynchronously.
   Future<Either<Failure, Unit>> clear();

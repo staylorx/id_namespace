@@ -2,63 +2,49 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../domain/storage/repositories/storage.dart';
 import '../../../utils/failures.dart';
-import '../../../domain/core/value_objects/namespace.dart';
+import '../../../data/core/models/namespace_dto.dart';
 
-/// In-memory implementation of AsyncIdStorage using `Map<String, Set<String>>`.
+/// In-memory implementation of AsyncIdStorage using `Set<NamespaceDto>`.
 ///
 /// This is the async version of InMemoryIdStorage, wrapping synchronous operations in Futures.
 class InMemoryIdStorage implements IdStorage {
-  final Map<String, Set<String>> _data = {};
-  final Map<String, int> _counters = {};
+  final Set<NamespaceDto> _data = {};
 
-  /// Adds the namespace.
+  /// Adds the namespace DTO.
   @override
-  Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
-    final uriKey = namespace.uri.toString();
-    final codes = _data.putIfAbsent(uriKey, () => {});
-    if (codes.contains(namespace.prefix)) {
+  Future<Either<Failure, Unit>> add(NamespaceDto dto) async {
+    if (_data.contains(dto)) {
       return Left(
-        DuplicateIdFailure(prefix: namespace.prefix, uri: namespace.uri),
+        DuplicateIdFailure(prefix: dto.prefix, uri: Uri.parse(dto.uri)),
       );
     }
-    codes.add(namespace.prefix);
+    _data.add(dto);
     return Right(unit);
   }
 
-  /// Removes the namespace.
+  /// Removes the namespace DTO.
   @override
-  Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
-    _data[namespace.uri.toString()]?.remove(namespace.prefix);
+  Future<Either<Failure, Unit>> remove(NamespaceDto dto) async {
+    _data.remove(dto);
     return Right(unit);
   }
 
-  /// Checks if the namespace exists.
+  /// Checks if the namespace DTO exists.
   @override
-  Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
-    return Right(
-      _data[namespace.uri.toString()]?.contains(namespace.prefix) ?? false,
-    );
+  Future<Either<Failure, bool>> contains(NamespaceDto dto) async {
+    return Right(_data.contains(dto));
   }
 
-  /// Returns all URIs.
+  /// Returns all stored namespace DTOs.
   @override
-  Future<Either<Failure, Set<String>>> getAllUris() async {
-    return Right(Set.from(_data.keys));
-  }
-
-  /// Returns ID codes for the URI.
-  @override
-  Future<Either<Failure, Set<String>>> getIdCodesForUri({
-    required Uri uri,
-  }) async {
-    return Right(_data[uri.toString()] ?? {});
+  Future<Either<Failure, Set<NamespaceDto>>> getAll() async {
+    return Right(Set.from(_data));
   }
 
   /// Clears all data.
   @override
   Future<Either<Failure, Unit>> clear() async {
     _data.clear();
-    _counters.clear();
     return Right(unit);
   }
 }
