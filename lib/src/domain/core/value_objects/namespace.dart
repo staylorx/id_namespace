@@ -15,6 +15,7 @@ class Namespace with EquatableMixin {
     this.rdfGraph,
   });
 
+  /// Creates a copy of this namespace with optionally updated fields.
   Namespace copyWith({
     Uri? uri,
     String? prefix,

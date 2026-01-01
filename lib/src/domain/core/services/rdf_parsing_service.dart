@@ -9,5 +9,8 @@ abstract class RdfParsingService {
   ///
   /// Determines the format from the URL path if not provided.
   /// Returns [ParseFailure] if parsing fails.
-  Future<Either<Failure, RdfGraph>> parseRdf(String content, String url);
+  Either<Failure, RdfGraph> parseRdf({
+    required String content,
+    required String url,
+  });
 }

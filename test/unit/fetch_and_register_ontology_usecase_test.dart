@@ -27,6 +27,10 @@ class FakeNamespace extends Fake implements Namespace {
 void main() {
   setUpAll(() {
     registerFallbackValue(FakeNamespace());
+    registerFallbackValue(Left<Failure, String>(NetworkFailure('')));
+    registerFallbackValue(Right<Failure, String>(''));
+    registerFallbackValue(Left<Failure, RdfGraph>(ParseFailure('')));
+    registerFallbackValue(Right<Failure, RdfGraph>(RdfGraph(triples: [])));
   });
 
   late MockFetchContentService mockFetchContentService;
@@ -71,7 +75,12 @@ void main() {
         failure,
       );
       verify(() => mockFetchContentService.fetchContent(url: url)).called(1);
-      verifyNever(() => mockRdfParsingService.parseRdf(any(), any()));
+      verifyNever(
+        () => mockRdfParsingService.parseRdf(
+          content: any(named: 'content'),
+          url: any(named: 'url'),
+        ),
+      );
       verifyNever(() => mockRepository.add(namespace: any(named: 'namespace')));
     });
 
@@ -84,8 +93,8 @@ void main() {
         () => mockFetchContentService.fetchContent(url: url),
       ).thenAnswer((_) async => fetchResult);
       when(
-        () => mockRdfParsingService.parseRdf(content, url),
-      ).thenAnswer((_) async => Left(parseFailure));
+        () => mockRdfParsingService.parseRdf(content: content, url: url),
+      ).thenReturn(Left(parseFailure));
 
       // When
       final result = await usecase.execute(
@@ -101,7 +110,9 @@ void main() {
         parseFailure,
       );
       verify(() => mockFetchContentService.fetchContent(url: url)).called(1);
-      verify(() => mockRdfParsingService.parseRdf(content, url)).called(1);
+      verify(
+        () => mockRdfParsingService.parseRdf(content: content, url: url),
+      ).called(1);
       verifyNever(() => mockRepository.add(namespace: any(named: 'namespace')));
     });
 
@@ -116,8 +127,8 @@ void main() {
         () => mockFetchContentService.fetchContent(url: url),
       ).thenAnswer((_) async => fetchResult);
       when(
-        () => mockRdfParsingService.parseRdf(content, url),
-      ).thenAnswer((_) async => parseResult);
+        () => mockRdfParsingService.parseRdf(content: content, url: url),
+      ).thenReturn(parseResult);
       when(
         () => mockRepository.add(namespace: any(named: 'namespace')),
       ).thenAnswer((_) async => Left(addFailure));
@@ -136,7 +147,9 @@ void main() {
         addFailure,
       );
       verify(() => mockFetchContentService.fetchContent(url: url)).called(1);
-      verify(() => mockRdfParsingService.parseRdf(content, url)).called(1);
+      verify(
+        () => mockRdfParsingService.parseRdf(content: content, url: url),
+      ).called(1);
       verify(
         () => mockRepository.add(namespace: any(named: 'namespace')),
       ).called(1);
@@ -153,8 +166,8 @@ void main() {
         () => mockFetchContentService.fetchContent(url: url),
       ).thenAnswer((_) async => fetchResult);
       when(
-        () => mockRdfParsingService.parseRdf(content, url),
-      ).thenAnswer((_) async => parseResult);
+        () => mockRdfParsingService.parseRdf(content: content, url: url),
+      ).thenReturn(parseResult);
       when(
         () => mockRepository.add(namespace: any(named: 'namespace')),
       ).thenAnswer((_) async => addResult);
@@ -169,7 +182,9 @@ void main() {
       // Then
       expect(result.isRight(), isTrue);
       verify(() => mockFetchContentService.fetchContent(url: url)).called(1);
-      verify(() => mockRdfParsingService.parseRdf(content, url)).called(1);
+      verify(
+        () => mockRdfParsingService.parseRdf(content: content, url: url),
+      ).called(1);
       verify(
         () => mockRepository.add(namespace: any(named: 'namespace')),
       ).called(1);

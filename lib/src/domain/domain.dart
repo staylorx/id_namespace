@@ -1,3 +1,7 @@
+/// Domain layer for the id_namespace library.
+///
+/// Contains business logic, entities, use cases, and interfaces that define
+/// the core functionality of the namespace management system.
 library;
 
 export 'core/entities/namespace_registry.dart';

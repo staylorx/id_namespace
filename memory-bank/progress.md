@@ -16,6 +16,7 @@ This file tracks the project's progress...
 [2026-01-01 04:50:55] - Completed comprehensive code tidy: reviewed for style violations, bugs, non-idiomatic Dart, ensured named parameters, no errors/warnings, formatted code, added dartdoc comments, verified clean architecture, no failing tests, removed unused imports. All 103 tests pass, code formatted with 11 changes.
 
 [2026-01-01 05:06:40] - Updated README.md with comprehensive documentation: added detailed architecture overview, usage examples for namespace management and ontology loading, API reference with all core classes and use cases, supported RDF formats, error handling guide, and contribution guidelines. Documentation now provides complete guidance for developers integrating the library.
+[2026-01-01 20:36:13] - [2026-01-01 13:36:00] - Completed comprehensive code tidy: ensured named parameters always, added dartdoc comments to libraries and public methods, verified clean architecture, fpdart usage, no Dart in non-code files, formatted codebase with 4 changes, all tests pass, no errors/warnings.
 
 ## Related Documentation
 

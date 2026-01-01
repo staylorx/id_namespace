@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:io';
 
 import 'package:logging/logging.dart';
@@ -25,8 +23,8 @@ class Logging {
     Logger.root.level = level;
     Logger.root.onRecord.listen((record) {
       // Simple console output, can be customized
-      print(
-        '${record.level.name}: ${record.loggerName}: ${record.loggerName}: ${record.message}',
+      stdout.writeln(
+        '${record.level.name}: ${record.loggerName}: ${record.time}: ${record.message}',
       );
     });
   }

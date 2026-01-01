@@ -8,7 +8,10 @@ import '../../../utils/failures.dart';
 /// Implementation of RdfParsingService using rdf_core and rdf_xml libraries.
 class RdfParsingServiceImpl implements RdfParsingService {
   @override
-  Future<Either<Failure, RdfGraph>> parseRdf(String content, String url) async {
+  Either<Failure, RdfGraph> parseRdf({
+    required String content,
+    required String url,
+  }) {
     try {
       final format = _getFormatFromUrl(url);
       final graph = _parseRdfContent(content, format);

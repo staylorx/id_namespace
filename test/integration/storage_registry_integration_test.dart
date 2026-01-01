@@ -8,8 +8,7 @@ void main() {
   setUpAll(() {
     Logger.root.level = Level.WARNING;
     Logger.root.onRecord.listen((record) {
-      // ignore: avoid_print
-      print(
+      stdout.writeln(
         '${record.level.name}: ${record.loggerName}: ${record.time}: ${record.message}',
       );
     });

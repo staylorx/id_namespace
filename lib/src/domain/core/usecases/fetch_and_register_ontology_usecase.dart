@@ -40,8 +40,11 @@ class FetchAndRegisterOntologyUsecase {
         _logger.info('Step 1 succeeded - fetched ${content.length} characters');
         // Step 2: Parse RDF
         _logger.info('Step 2 - Parsing RDF...');
-        final rdfEither = await rdfParsingService.parseRdf(content, url);
-        return await rdfEither.match(
+        final rdfEither = rdfParsingService.parseRdf(
+          content: content,
+          url: url,
+        );
+        return rdfEither.match(
           (failure) {
             _logger.severe('Step 2 failed - $failure');
             return Future.value(Left(failure));

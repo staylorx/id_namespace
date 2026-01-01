@@ -26,3 +26,9 @@ This file records architectural and implementation decisions...
 ## Related Documentation
 
 - Implemented patterns from these decisions: [systemPatterns.md](systemPatterns.md)
+
+## Architectural Rule Application
+
+[2026-01-01 20:15:20] - Applied the architectural rule "Pure business rules: sync where possible. Anything that talks to the outside world: async at the boundary."
+
+Analysis showed that RDF parsing was unnecessarily async despite being pure synchronous business logic. Refactored RdfParsingService to return Either instead of Future<Either>, updated implementation and tests accordingly. All 103 tests pass, maintaining clean architecture principles.

@@ -10,7 +10,7 @@ void main() {
   });
 
   group('RdfParsingServiceImpl', () {
-    test('should parse Turtle RDF content', () async {
+    test('should parse Turtle RDF content', () {
       // Given
       final content = '''
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -22,7 +22,7 @@ void main() {
       final url = 'http://example.org/test.ttl';
 
       // When
-      final result = await service.parseRdf(content, url);
+      final result = service.parseRdf(content: content, url: url);
 
       // Then
       expect(result.isRight(), isTrue);
@@ -32,7 +32,7 @@ void main() {
       expect(graph.triples, isNotEmpty);
     });
 
-    test('should parse RDF/XML content', () async {
+    test('should parse RDF/XML content', () {
       // Given
       final content = '''
 <?xml version="1.0"?>
@@ -46,7 +46,7 @@ void main() {
       final url = 'http://example.org/test.rdf';
 
       // When
-      final result = await service.parseRdf(content, url);
+      final result = service.parseRdf(content: content, url: url);
 
       // Then
       expect(result.isRight(), isTrue);
@@ -56,13 +56,13 @@ void main() {
       expect(graph.triples, isNotEmpty);
     });
 
-    test('should return ParseFailure for invalid RDF content', () async {
+    test('should return ParseFailure for invalid RDF content', () {
       // Given
       final invalidContent = 'This is not RDF content';
       final url = 'http://example.org/test.ttl';
 
       // When
-      final result = await service.parseRdf(invalidContent, url);
+      final result = service.parseRdf(content: invalidContent, url: url);
 
       // Then
       expect(result.isLeft(), isTrue);
@@ -72,13 +72,13 @@ void main() {
       expect(failure, isA<ParseFailure>());
     });
 
-    test('should parse empty content successfully', () async {
+    test('should parse empty content successfully', () {
       // Given
       final emptyContent = '';
       final url = 'http://example.org/test.ttl';
 
       // When
-      final result = await service.parseRdf(emptyContent, url);
+      final result = service.parseRdf(content: emptyContent, url: url);
 
       // Then
       expect(result.isRight(), isTrue);
@@ -88,7 +88,7 @@ void main() {
       expect(graph.triples, isEmpty);
     });
 
-    test('should return ParseFailure for malformed Turtle RDF', () async {
+    test('should return ParseFailure for malformed Turtle RDF', () {
       // Given
       final malformedContent = '''
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -97,7 +97,7 @@ void main() {
       final url = 'http://example.org/test.ttl';
 
       // When
-      final result = await service.parseRdf(malformedContent, url);
+      final result = service.parseRdf(content: malformedContent, url: url);
 
       // Then
       expect(result.isLeft(), isTrue);
@@ -107,7 +107,7 @@ void main() {
       expect(failure, isA<ParseFailure>());
     });
 
-    test('should return ParseFailure for malformed RDF/XML', () async {
+    test('should return ParseFailure for malformed RDF/XML', () {
       // Given
       final malformedContent = '''
 <?xml version="1.0"?>
@@ -121,7 +121,7 @@ void main() {
       final url = 'http://example.org/test.rdf';
 
       // When
-      final result = await service.parseRdf(malformedContent, url);
+      final result = service.parseRdf(content: malformedContent, url: url);
 
       // Then
       expect(result.isLeft(), isTrue);
@@ -131,14 +131,14 @@ void main() {
       expect(failure, isA<ParseFailure>());
     });
 
-    test('should parse N-Triples content', () async {
+    test('should parse N-Triples content', () {
       // Given
       final content =
           '<http://example.org/person1> <http://xmlns.com/foaf/0.1/name> "John Doe" .';
       final url = 'http://example.org/test.nt';
 
       // When
-      final result = await service.parseRdf(content, url);
+      final result = service.parseRdf(content: content, url: url);
 
       // Then
       expect(result.isRight(), isTrue);
@@ -148,7 +148,7 @@ void main() {
       expect(graph.triples, isNotEmpty);
     });
 
-    test('should parse JSON-LD content', () async {
+    test('should parse JSON-LD content', () {
       // Given
       final content = '''
 {
@@ -162,7 +162,7 @@ void main() {
       final url = 'http://example.org/test.jsonld';
 
       // When
-      final result = await service.parseRdf(content, url);
+      final result = service.parseRdf(content: content, url: url);
 
       // Then
       expect(result.isRight(), isTrue);
@@ -172,13 +172,13 @@ void main() {
       expect(graph.triples, isNotEmpty);
     });
 
-    test('should return ParseFailure for malformed JSON-LD', () async {
+    test('should return ParseFailure for malformed JSON-LD', () {
       // Given
       final malformedContent = '{"invalid": json}';
       final url = 'http://example.org/test.jsonld';
 
       // When
-      final result = await service.parseRdf(malformedContent, url);
+      final result = service.parseRdf(content: malformedContent, url: url);
 
       // Then
       expect(result.isLeft(), isTrue);
@@ -188,7 +188,7 @@ void main() {
       expect(failure, isA<ParseFailure>());
     });
 
-    test('should default to Turtle for unknown extension', () async {
+    test('should default to Turtle for unknown extension', () {
       // Given
       final content = '''
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -197,7 +197,7 @@ void main() {
       final url = 'http://example.org/test.unknown';
 
       // When
-      final result = await service.parseRdf(content, url);
+      final result = service.parseRdf(content: content, url: url);
 
       // Then
       expect(result.isRight(), isTrue);

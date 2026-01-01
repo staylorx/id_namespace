@@ -1,3 +1,7 @@
+/// Data layer implementations for the id_namespace library.
+///
+/// Contains concrete implementations of repositories, services, and data models
+/// following the clean architecture pattern.
 library;
 
 export 'core/models/namespace_dto.dart';
