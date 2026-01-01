@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:id_namespace/src/utils/failures.dart';
+import 'package:id_namespace/src/utils/logging.dart';
 import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
 import 'package:id_namespace/src/domain/core/value_objects/namespace.dart';
 import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
@@ -8,7 +9,9 @@ import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
 class IdRegistryRepositoryImpl implements IdRegistryRepository {
   final IdStorage storage;
 
-  IdRegistryRepositoryImpl({required this.storage});
+  IdRegistryRepositoryImpl({required this.storage}) {
+    Logging.configure();
+  }
 
   /// Registers the namespace.
   @override

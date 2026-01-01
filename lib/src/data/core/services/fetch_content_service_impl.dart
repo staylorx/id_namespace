@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:logging/logging.dart';
+import 'package:id_namespace/src/utils/logging.dart';
 
 import '../../../domain/core/services/fetch_content_service.dart';
 import '../../../utils/failures.dart';
 
 /// Implementation of FetchContentService using Dio for HTTP and File for local files.
 class FetchContentServiceImpl implements FetchContentService {
-  final _logger = Logger('FetchContentServiceImpl');
+  final _logger = Logging.getLogger('FetchContentServiceImpl');
 
   @override
   Future<Either<Failure, String>> fetchContent({required String url}) async {

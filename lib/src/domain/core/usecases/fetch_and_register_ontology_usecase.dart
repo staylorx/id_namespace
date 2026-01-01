@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:logging/logging.dart';
+import 'package:id_namespace/src/utils/logging.dart';
 
 import '../../../utils/failures.dart';
 import '../repositories/id_registry_repository.dart';
@@ -9,7 +9,7 @@ import '../value_objects/namespace.dart';
 
 /// Usecase for fetching and registering an ontology from the internet.
 class FetchAndRegisterOntologyUsecase {
-  final _logger = Logger('FetchAndRegisterOntologyUsecase');
+  final _logger = Logging.getLogger('FetchAndRegisterOntologyUsecase');
 
   final FetchContentService fetchContentService;
   final RdfParsingService rdfParsingService;
