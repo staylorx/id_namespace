@@ -2,33 +2,22 @@ import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:id_namespace/src/data/core/repositories/id_registry_repository_impl.dart';
-import 'package:id_namespace/src/data/storage/repositories/file_based_id_storage.dart';
+import 'package:id_namespace/src/data/storage/repositories/in_memory_id_storage.dart';
 import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
 import 'package:id_namespace/src/domain/core/usecases/fetch_and_register_ontology_usecase.dart';
 import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
-import 'package:path/path.dart' as path;
 import 'package:rdf_core/rdf_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  late Directory tempDir;
-  late String storageFilePath;
   late IdStorage storage;
   late IdRegistryRepository repository;
   late FetchAndRegisterOntologyUsecase usecase;
 
   setUp(() {
-    tempDir = Directory.systemTemp.createTempSync('id_namespace_test_');
-    storageFilePath = path.join(tempDir.path, 'registry.json');
-    storage = FileBasedIdStorage(filePath: storageFilePath);
+    storage = InMemoryIdStorage();
     repository = IdRegistryRepositoryImpl(storage: storage);
     usecase = FetchAndRegisterOntologyUsecase(repository: repository);
-  });
-
-  tearDown(() {
-    if (tempDir.existsSync()) {
-      tempDir.deleteSync(recursive: true);
-    }
   });
 
   test('should fetch and register FOAF ontology', () async {
