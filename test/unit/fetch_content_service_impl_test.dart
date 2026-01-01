@@ -16,20 +16,16 @@ void main() {
   group('FetchContentServiceImpl', () {
     test('should fetch content from file URL', () async {
       // Given
-      final testContent = 'test RDF content';
-      final tempFile = File('${Directory.systemTemp.path}/test.rdf');
-      await tempFile.writeAsString(testContent);
-      final fileUrl = 'file://${tempFile.path}';
+      final file = File('test/assets/formats/example.rdf');
+      final expectedContent = await file.readAsString();
+      final fileUrl = Uri.file(file.absolute.path).toString();
 
       // When
       final result = await service.fetchContent(fileUrl);
 
       // Then
       expect(result.isRight(), isTrue);
-      expect(result.getRight().getOrElse(() => ''), testContent);
-
-      // Cleanup
-      await tempFile.delete();
+      expect(result.getRight().getOrElse(() => ''), expectedContent);
     });
 
     test('should return NetworkFailure for invalid file URL', () async {

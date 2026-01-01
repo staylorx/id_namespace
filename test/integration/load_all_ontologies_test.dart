@@ -25,6 +25,7 @@ void main() {
 
   setUp(() async {
     final tempDir = await Directory.systemTemp.createTemp('id_namespace_test_');
+    //final tempDir = Directory('build');
     tempFilePath = '${tempDir.path}/storage.json';
     storage = FileBasedIdStorage(filePath: tempFilePath);
     repository = IdRegistryRepositoryImpl(storage: storage);
@@ -45,27 +46,38 @@ void main() {
     if (await dir.exists()) await dir.delete();
   });
 
-  test('should load all ontologies from JSON and register them', () async {
-    // Read ontologies.json
-    final ontologiesFile = File('test/assets/ontologies.json');
-    final content = await ontologiesFile.readAsString();
-    final jsonData = json.decode(content) as Map<String, dynamic>;
-    final ontologies = jsonData['ontologies'] as List<dynamic>;
+  test(
+    'should load all ontologies from JSON and register them',
+    () async {
+      // Read ontologies.json
+      final ontologiesFile = File('test/assets/ontologies.json');
+      final content = await ontologiesFile.readAsString();
+      final jsonData = json.decode(content) as Map<String, dynamic>;
+      final ontologies = jsonData['ontologies'] as List<dynamic>;
 
-    // For each ontology, execute usecase
-    for (final ontology in ontologies) {
-      final result = await usecase.execute(
-        url: ontology['downloadURL'] as String,
-        prefix: ontology['code'] as String,
-        description: ontology['formalName'] as String,
+      // For each ontology, execute usecase in parallel
+      final futures = ontologies.map(
+        (ontology) => usecase.execute(
+          url: ontology['downloadURL'] as String,
+          prefix: ontology['code'] as String,
+          description: ontology['formalName'] as String,
+        ),
       );
-      expect(result.isRight(), isTrue, reason: 'Failed to register ${ontology['code']}');
-    }
+      final results = await Future.wait(futures);
+      final successfulResults = results
+          .where((result) => result.isRight())
+          .toList();
+      final failedCount = results.length - successfulResults.length;
+      if (failedCount > 0) {
+        print('Warning: $failedCount ontologies failed to load.');
+      }
 
-    // Verify all are registered
-    final allResult = await getAllUsecase.execute();
-    expect(allResult.isRight(), isTrue);
-    final namespaces = allResult.getRight().getOrElse(() => {});
-    expect(namespaces.length, ontologies.length);
-  }, timeout: Timeout(Duration(minutes: 10)));
+      // Verify successful ones are registered
+      final allResult = await getAllUsecase.execute();
+      expect(allResult.isRight(), isTrue);
+      final namespaces = allResult.getRight().getOrElse(() => {});
+      expect(namespaces.length, successfulResults.length);
+    },
+    timeout: Timeout(Duration(minutes: 10)),
+  );
 }

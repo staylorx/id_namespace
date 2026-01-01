@@ -9,10 +9,19 @@ import 'package:id_namespace/src/domain/core/services/fetch_content_service.dart
 import 'package:id_namespace/src/domain/core/services/rdf_parsing_service.dart';
 import 'package:id_namespace/src/domain/core/usecases/fetch_and_register_ontology_usecase.dart';
 import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
+import 'package:logging/logging.dart';
 import 'package:rdf_xml/rdf_xml.dart';
 import 'package:test/test.dart';
 
 void main() {
+  setUpAll(() {
+    Logger.root.level = Level.ALL;
+    Logger.root.onRecord.listen((record) {
+      // ignore: avoid_print
+      print('${record.level.name}: ${record.time}: ${record.message}');
+    });
+  });
+
   late IdStorage storage;
   late IdRegistryRepository repository;
   late FetchContentService fetchContentService;
@@ -42,19 +51,20 @@ void main() {
   });
 
   test('should fetch and register FOAF ontology by file', () async {
+    final file = File("test/assets/ontologies/rdf.rdf");
+
     // Given
     final ontology = {
-      "code": "FOAF",
-      "formalName": "Friend of a Friend",
-      "downloadURL":
-          "file:///${Directory.current.path.replaceAll('\\', '/')}/test/assets/ontologies/foaf.rdf",
+      "prefix": "RDF",
+      "description": "Resource Description Framework",
+      "downloadURL": Uri.file(file.absolute.path).toString(),
     };
 
     // When
     final result = await usecase.execute(
       url: ontology['downloadURL']!,
-      prefix: ontology['code']!,
-      description: ontology['formalName'],
+      prefix: ontology['prefix']!,
+      description: ontology['description'],
     );
 
     // Then
@@ -62,13 +72,13 @@ void main() {
 
     // Verify the ontology is registered
     final getResult = await repository.getNamespaceByUri(
-      uri: Uri.parse(ontology['code']!),
+      uri: Uri.parse(ontology['downloadURL']!),
     );
     expect(getResult.isRight(), isTrue);
     final namespace = getResult.getRight().getOrElse(
       () => throw Exception('Should be right'),
     );
-    expect(namespace.prefix, ontology['code']);
+    expect(namespace.prefix, ontology['prefix']);
     expect(namespace.uri.toString(), ontology['downloadURL']);
 
     // Verify the RdfGraph is properly stored and retrieved
@@ -79,27 +89,25 @@ void main() {
     final filePath = ontology['downloadURL']!.replaceFirst('file:///', '');
     final content = await File(filePath).readAsString();
     final expectedGraph = rdfxml.decode(content);
-    // Check that the lengths are within 5% of each other, as serialization may change the count
+
     final actualLength = namespace.rdfGraph!.triples.length;
     final expectedLength = expectedGraph.triples.length;
-    final difference = (actualLength - expectedLength).abs();
-    final tolerance = (expectedLength * 0.05).ceil();
-    expect(difference, lessThanOrEqualTo(tolerance));
+    expect(actualLength, closeTo(expectedLength, 10));
   });
 
   test('should fetch and register FOAF ontology by URL', () async {
     // Given
     final ontology = {
-      "code": "FOAF",
-      "formalName": "Friend of a Friend",
-      "downloadURL": "https://xmlns.com/foaf/spec/index.rdf",
+      "prefix": "RDF",
+      "description": "Resource Description Framework",
+      "downloadURL": "https://www.w3.org/1999/02/22-rdf-syntax-ns.rdf",
     };
 
     // When
     final result = await usecase.execute(
       url: ontology['downloadURL']!,
-      prefix: ontology['code']!,
-      description: ontology['formalName'],
+      prefix: ontology['prefix']!,
+      description: ontology['description'],
     );
 
     // Then
@@ -107,13 +115,13 @@ void main() {
 
     // Verify the ontology is registered
     final getResult = await repository.getNamespaceByUri(
-      uri: Uri.parse(ontology['code']!),
+      uri: Uri.parse(ontology['downloadURL']!),
     );
     expect(getResult.isRight(), isTrue);
     final namespace = getResult.getRight().getOrElse(
       () => throw Exception('Should be right'),
     );
-    expect(namespace.prefix, ontology['code']);
+    expect(namespace.prefix, ontology['prefix']);
     expect(namespace.uri.toString(), ontology['downloadURL']);
 
     // Verify the RdfGraph is properly stored and retrieved
