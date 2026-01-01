@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:rdf_core/rdf_core.dart';
+import 'package:rdf_xml/rdf_xml.dart';
 
 import '../../../domain/core/value_objects/namespace.dart';
 
@@ -21,7 +22,7 @@ class NamespaceDto with EquatableMixin {
   });
 
   @override
-  List<Object?> get props => [uri, prefix];
+  List<Object?> get props => [prefix];
 
   /// Creates a NamespaceDto from a JSON map.
   factory NamespaceDto.fromJson(Map<String, dynamic> json) {
@@ -49,7 +50,7 @@ class NamespaceDto with EquatableMixin {
       uri: Uri.parse(uri),
       prefix: prefix,
       description: description,
-      rdfGraph: _deserializeRdfGraph(rdfGraph),
+      rdfGraph: deserialize(rdfGraph),
     );
   }
 
@@ -59,35 +60,72 @@ class NamespaceDto with EquatableMixin {
       uri: namespace.uri.toString(),
       prefix: namespace.prefix,
       description: namespace.description,
-      rdfGraph: _serializeRdfGraph(namespace.rdfGraph),
+      rdfGraph: serialize(namespace.rdfGraph),
     );
   }
 
-  /// Deserializes a Turtle-formatted String to an RdfGraph.
+  /// Serializes an [RdfGraph] to a Turtle string.
   ///
-  /// Returns null if the data is null or deserialization fails.
-  static RdfGraph? _deserializeRdfGraph(String? data) {
-    if (data == null) return null;
-
+  /// Returns null if [graph] is null.
+  /// Returns null if serialization fails.
+  static String? serialize(RdfGraph? graph) {
+    if (graph == null) return null;
     try {
-      return rdf.decode(data, contentType: 'text/turtle');
+      return rdf.encode(graph, contentType: 'text/turtle');
     } catch (e) {
-      // Return null on deserialization failure
       return null;
     }
   }
 
-  /// Serializes an RdfGraph to a Turtle-formatted String.
+  /// Deserializes a Turtle string to an [RdfGraph].
   ///
-  /// Returns null if the graph is null or serialization fails.
-  static String? _serializeRdfGraph(RdfGraph? graph) {
-    if (graph == null) return null;
-
+  /// Returns null if [rdfString] is null or empty.
+  /// Returns null if deserialization fails.
+  static RdfGraph? deserialize(String? rdfString) {
+    if (rdfString == null || rdfString.isEmpty) return null;
     try {
-      return rdf.encode(graph, contentType: 'text/turtle');
+      return rdf.decode(rdfString, contentType: 'text/turtle');
     } catch (e) {
-      // Return null on serialization failure
       return null;
+    }
+  }
+
+  /// Determines RDF format from URL path.
+  static String getFormatFromUrl(String path) {
+    if (path.endsWith('.ttl') || path.endsWith('.turtle')) {
+      return 'turtle';
+    } else if (path.endsWith('.rdf') || path.endsWith('.xml')) {
+      return 'rdfxml';
+    } else if (path.endsWith('.nt')) {
+      return 'ntriples';
+    } else if (path.endsWith('.jsonld')) {
+      return 'jsonld';
+    } else {
+      return 'turtle'; // default
+    }
+  }
+
+  /// Parses RDF content into an [RdfGraph].
+  static RdfGraph parseRdfContent(String content, String format) {
+    switch (format) {
+      case 'rdfxml':
+        return rdfxml.decode(content);
+      default:
+        String contentType;
+        switch (format) {
+          case 'turtle':
+            contentType = 'text/turtle';
+            break;
+          case 'ntriples':
+            contentType = 'application/n-triples';
+            break;
+          case 'jsonld':
+            contentType = 'application/ld+json';
+            break;
+          default:
+            contentType = 'text/turtle'; // default to turtle
+        }
+        return rdf.decode(content, contentType: contentType);
     }
   }
 }

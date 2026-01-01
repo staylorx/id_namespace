@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:rdf_core/rdf_core.dart';
-
 import 'package:id_namespace/src/utils/failures.dart';
 import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
 import 'package:id_namespace/src/domain/core/value_objects/namespace.dart';
@@ -17,6 +15,7 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   IdRegistryRepositoryImpl({required this.storage});
 
   /// Registers the namespace.
+  /// TODO: check for duplicates before adding
   @override
   Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
     return await storage.add(namespace);
@@ -42,17 +41,14 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
     required String prefix,
   }) async {
     final allResult = await getAll();
-    return allResult.fold(
-      (failure) => Left(failure),
-      (allNamespaces) {
-        try {
-          final namespace = allNamespaces.firstWhere((ns) => ns.prefix == prefix);
-          return Right(namespace);
-        } catch (e) {
-          return Left(NotFoundFailure('Namespace with prefix $prefix not found'));
-        }
-      },
-    );
+    return allResult.fold((failure) => Left(failure), (allNamespaces) {
+      try {
+        final namespace = allNamespaces.firstWhere((ns) => ns.prefix == prefix);
+        return Right(namespace);
+      } catch (e) {
+        return Left(NotFoundFailure('Namespace with prefix $prefix not found'));
+      }
+    });
   }
 
   /// Returns namespace by code.
@@ -61,17 +57,14 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
     required String code,
   }) async {
     final allResult = await getAll();
-    return allResult.fold(
-      (failure) => Left(failure),
-      (allNamespaces) {
-        try {
-          final namespace = allNamespaces.firstWhere((ns) => ns.prefix == code);
-          return Right(namespace);
-        } catch (e) {
-          return Left(NotFoundFailure('Namespace with code $code not found'));
-        }
-      },
-    );
+    return allResult.fold((failure) => Left(failure), (allNamespaces) {
+      try {
+        final namespace = allNamespaces.firstWhere((ns) => ns.prefix == code);
+        return Right(namespace);
+      } catch (e) {
+        return Left(NotFoundFailure('Namespace with code $code not found'));
+      }
+    });
   }
 
   /// Returns all registered namespaces.
@@ -111,10 +104,10 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
       }
 
       // Determine format from URL extension
-      final format = _getFormatFromUrl(uri.path);
+      final format = NamespaceDto.getFormatFromUrl(uri.path);
 
       // Parse RDF content
-      final RdfGraph rdfGraph = _parseRdfContent(content, format);
+      final rdfGraph = NamespaceDto.parseRdfContent(content, format);
 
       final namespace = Namespace(
         uri: uri,
@@ -131,38 +124,5 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
     }
   }
 
-  String _getFormatFromUrl(String path) {
-    if (path.endsWith('.ttl') || path.endsWith('.turtle')) {
-      return 'turtle';
-    } else if (path.endsWith('.rdf') || path.endsWith('.xml')) {
-      return 'rdfxml';
-    } else if (path.endsWith('.nt')) {
-      return 'ntriples';
-    } else if (path.endsWith('.jsonld')) {
-      return 'jsonld';
-    } else {
-      return 'turtle'; // default
-    }
-  }
 
-  RdfGraph _parseRdfContent(String content, String format) {
-    String contentType;
-    switch (format) {
-      case 'turtle':
-        contentType = 'text/turtle';
-        break;
-      case 'ntriples':
-        contentType = 'application/n-triples';
-        break;
-      case 'jsonld':
-        contentType = 'application/ld+json';
-        break;
-      case 'rdfxml':
-        contentType = 'application/rdf+xml';
-        break;
-      default:
-        contentType = 'text/turtle'; // default to turtle
-    }
-    return rdf.decode(content, contentType: contentType);
-  }
 }

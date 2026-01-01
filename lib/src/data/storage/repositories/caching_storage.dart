@@ -1,7 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
 import '../../../utils/failures.dart';
-import '../../../data/core/models/namespace_dto.dart';
 import '../../../domain/storage/repositories/storage.dart';
 import '../../../domain/core/value_objects/namespace.dart';
 
