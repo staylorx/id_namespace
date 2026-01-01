@@ -19,15 +19,13 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   /// Registers the namespace.
   @override
   Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
-    final dto = NamespaceDto.fromEntity(namespace);
-    return await storage.add(dto);
+    return await storage.add(namespace);
   }
 
   /// Unregisters the namespace.
   @override
   Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
-    final dto = NamespaceDto.fromEntity(namespace);
-    return await storage.remove(dto);
+    return await storage.remove(namespace);
   }
 
   /// Checks if the namespace is registered.
@@ -35,8 +33,7 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   Future<Either<Failure, bool>> isRegistered({
     required Namespace namespace,
   }) async {
-    final dto = NamespaceDto.fromEntity(namespace);
-    return await storage.contains(dto);
+    return await storage.contains(namespace);
   }
 
   /// Returns namespace by prefix.
@@ -80,11 +77,7 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   /// Returns all registered namespaces.
   @override
   Future<Either<Failure, Set<Namespace>>> getAll() async {
-    final dtosResult = await storage.getAll();
-    return dtosResult.fold(
-      (failure) => Left(failure),
-      (dtos) => Right(dtos.map((dto) => dto.toEntity()).toSet()),
-    );
+    return await storage.getAll();
   }
 
   /// Clears all registrations.

@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import '../../../domain/storage/repositories/storage.dart';
 import '../../../utils/failures.dart';
 import '../../../data/core/models/namespace_dto.dart';
+import '../../../domain/core/value_objects/namespace.dart';
 
 /// File-based implementation of AsyncIdStorage that persists data to JSON files asynchronously.
 ///
@@ -56,12 +57,13 @@ class FileBasedIdStorage implements IdStorage {
     }
   }
 
-  /// Adds the namespace DTO to the storage.
+  /// Adds the namespace to the storage.
   @override
-  Future<Either<Failure, Unit>> add(NamespaceDto dto) async {
+  Future<Either<Failure, Unit>> add(Namespace namespace) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) return loadResult;
 
+    final dto = NamespaceDto.fromEntity(namespace);
     if (_data.contains(dto)) {
       return Left(
         DuplicateIdFailure(prefix: dto.prefix, uri: Uri.parse(dto.uri)),
@@ -72,19 +74,20 @@ class FileBasedIdStorage implements IdStorage {
     return await _saveToFile();
   }
 
-  /// Removes the namespace DTO from the storage.
+  /// Removes the namespace from the storage.
   @override
-  Future<Either<Failure, Unit>> remove(NamespaceDto dto) async {
+  Future<Either<Failure, Unit>> remove(Namespace namespace) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) return loadResult;
 
+    final dto = NamespaceDto.fromEntity(namespace);
     _data.remove(dto);
     return await _saveToFile();
   }
 
-  /// Checks if the namespace DTO exists in the storage.
+  /// Checks if the namespace exists in the storage.
   @override
-  Future<Either<Failure, bool>> contains(NamespaceDto dto) async {
+  Future<Either<Failure, bool>> contains(Namespace namespace) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) {
       return Left(
@@ -92,12 +95,13 @@ class FileBasedIdStorage implements IdStorage {
       );
     }
 
+    final dto = NamespaceDto.fromEntity(namespace);
     return Right(_data.contains(dto));
   }
 
-  /// Returns all stored namespace DTOs.
+  /// Returns all stored namespaces.
   @override
-  Future<Either<Failure, Set<NamespaceDto>>> getAll() async {
+  Future<Either<Failure, Set<Namespace>>> getAll() async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) {
       return Left(
@@ -105,7 +109,7 @@ class FileBasedIdStorage implements IdStorage {
       );
     }
 
-    return Right(Set.from(_data));
+    return Right(_data.map((dto) => dto.toEntity()).toSet());
   }
 
   /// Clears all data from the storage.
