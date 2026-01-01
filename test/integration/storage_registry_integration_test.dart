@@ -71,7 +71,9 @@ void main() {
       // Check via getNamespaceByPrefix
       final byPrefixResult = await getByPrefixUsecase.execute(prefix: "EX");
       expect(byPrefixResult.isRight(), isTrue);
-      final namespace = byPrefixResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final namespace = byPrefixResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
       expect(namespace.prefix, "EX");
       expect(namespace.description, "Example ontology");
       expect(namespace.rdfGraph, isNotNull);
@@ -92,13 +94,19 @@ void main() {
       // Query by prefix
       final byPrefixResult = await getByPrefixUsecase.execute(prefix: "EX");
       expect(byPrefixResult.isRight(), isTrue);
-      final namespace = byPrefixResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final namespace = byPrefixResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
       expect(namespace.prefix, "EX");
 
       // Query by URI
-      final byUriResult = await getByUriUsecase.execute(uri: Uri.parse(Uri.file(file.absolute.path).toString()));
+      final byUriResult = await getByUriUsecase.execute(
+        uri: Uri.parse(Uri.file(file.absolute.path).toString()),
+      );
       expect(byUriResult.isRight(), isTrue);
-      final namespaceByUri = byUriResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final namespaceByUri = byUriResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
       expect(namespaceByUri.prefix, "EX");
 
       // Get all namespaces
@@ -155,17 +163,23 @@ void main() {
       // Get the namespace
       final getResult = await getByPrefixUsecase.execute(prefix: "EX");
       expect(getResult.isRight(), isTrue);
-      final originalNamespace = getResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final originalNamespace = getResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
       final originalTripleCount = originalNamespace.rdfGraph!.triples.length;
 
       // Simulate storage reload by creating new repository instance
       final newRepository = IdRegistryRepositoryImpl(storage: storage);
-      final newGetByPrefixUsecase = GetNamespaceByPrefixUsecase(repository: newRepository);
+      final newGetByPrefixUsecase = GetNamespaceByPrefixUsecase(
+        repository: newRepository,
+      );
 
       // Query again
       final reloadedResult = await newGetByPrefixUsecase.execute(prefix: "EX");
       expect(reloadedResult.isRight(), isTrue);
-      final reloadedNamespace = reloadedResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final reloadedNamespace = reloadedResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
 
       // Verify data integrity
       expect(reloadedNamespace.prefix, originalNamespace.prefix);

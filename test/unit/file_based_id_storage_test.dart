@@ -48,19 +48,24 @@ void main() {
       expect(content, contains('ns1'));
     });
 
-    test('should return DuplicateIdFailure when adding duplicate namespace', () async {
-      // Given
-      await storage.add(namespace: testNamespace1);
+    test(
+      'should return DuplicateIdFailure when adding duplicate namespace',
+      () async {
+        // Given
+        await storage.add(namespace: testNamespace1);
 
-      // When
-      final result = await storage.add(namespace: testNamespace1);
+        // When
+        final result = await storage.add(namespace: testNamespace1);
 
-      // Then
-      expect(result.isLeft(), isTrue);
-      final failure = result.getLeft().getOrElse(() => throw Exception('Should be left'));
-      expect(failure, isA<DuplicateIdFailure>());
-      expect((failure as DuplicateIdFailure).prefix, 'ns1');
-    });
+        // Then
+        expect(result.isLeft(), isTrue);
+        final failure = result.getLeft().getOrElse(
+          () => throw Exception('Should be left'),
+        );
+        expect(failure, isA<DuplicateIdFailure>());
+        expect((failure as DuplicateIdFailure).prefix, 'ns1');
+      },
+    );
 
     test('should remove a namespace successfully', () async {
       // Given
@@ -96,14 +101,17 @@ void main() {
       expect(result.getRight().getOrElse(() => false), isTrue);
     });
 
-    test('should return empty set for getAll when no namespaces added', () async {
-      // When
-      final result = await storage.getAll();
+    test(
+      'should return empty set for getAll when no namespaces added',
+      () async {
+        // When
+        final result = await storage.getAll();
 
-      // Then
-      expect(result.isRight(), isTrue);
-      expect(result.getRight().getOrElse(() => {testNamespace1}), isEmpty);
-    });
+        // Then
+        expect(result.isRight(), isTrue);
+        expect(result.getRight().getOrElse(() => {testNamespace1}), isEmpty);
+      },
+    );
 
     test('should return all added namespaces for getAll', () async {
       // Given
@@ -132,7 +140,10 @@ void main() {
       // Then
       expect(result.isRight(), isTrue);
       final getAllResult = await storage.getAll();
-      expect(getAllResult.getRight().getOrElse(() => {testNamespace1}), isEmpty);
+      expect(
+        getAllResult.getRight().getOrElse(() => {testNamespace1}),
+        isEmpty,
+      );
     });
 
     test('should load existing data from file', () async {
@@ -144,8 +155,8 @@ void main() {
             'uri': 'http://example.com/preloaded',
             'prefix': 'pre',
             'description': 'Preloaded namespace',
-          }
-        ]
+          },
+        ],
       };
       file.writeAsStringSync(json.encode(jsonData));
 
@@ -171,7 +182,9 @@ void main() {
 
       // Then
       expect(result.isLeft(), isTrue);
-      final failure = result.getLeft().getOrElse(() => throw Exception('Should be left'));
+      final failure = result.getLeft().getOrElse(
+        () => throw Exception('Should be left'),
+      );
       expect(failure, isA<StorageFailure>());
     });
 

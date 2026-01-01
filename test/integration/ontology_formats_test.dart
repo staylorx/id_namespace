@@ -59,7 +59,9 @@ void main() {
         uri: Uri.parse(Uri.file(file.absolute.path).toString()),
       );
       expect(getResult.isRight(), isTrue);
-      final namespace = getResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final namespace = getResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
       expect(namespace.prefix, "EX");
       expect(namespace.rdfGraph, isNotNull);
       expect(namespace.rdfGraph!.triples, isNotEmpty);
@@ -80,7 +82,9 @@ void main() {
         uri: Uri.parse(Uri.file(file.absolute.path).toString()),
       );
       expect(getResult.isRight(), isTrue);
-      final namespace = getResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final namespace = getResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
       expect(namespace.prefix, "EX");
       expect(namespace.rdfGraph, isNotNull);
       expect(namespace.rdfGraph!.triples, isNotEmpty);
@@ -101,7 +105,9 @@ void main() {
         uri: Uri.parse(Uri.file(file.absolute.path).toString()),
       );
       expect(getResult.isRight(), isTrue);
-      final namespace = getResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final namespace = getResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
       expect(namespace.prefix, "EX");
       expect(namespace.rdfGraph, isNotNull);
       expect(namespace.rdfGraph!.triples, isNotEmpty);
@@ -122,7 +128,9 @@ void main() {
         uri: Uri.parse(Uri.file(file.absolute.path).toString()),
       );
       expect(getResult.isRight(), isTrue);
-      final namespace = getResult.getRight().getOrElse(() => throw Exception('Should be right'));
+      final namespace = getResult.getRight().getOrElse(
+        () => throw Exception('Should be right'),
+      );
       expect(namespace.prefix, "EX");
       expect(namespace.rdfGraph, isNotNull);
       expect(namespace.rdfGraph!.triples, isNotEmpty);

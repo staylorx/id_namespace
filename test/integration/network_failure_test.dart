@@ -44,30 +44,42 @@ void main() {
   });
 
   group('Ontology Loading - Network Failures', () {
-    test('should handle 404 Not Found gracefully', () async {
-      final result = await usecase.execute(
-        url: "http://httpstat.us/404",
-        prefix: "NOTFOUND",
-        description: "Non-existent ontology",
-      );
+    test(
+      'should handle 404 Not Found gracefully',
+      () async {
+        final result = await usecase.execute(
+          url: "http://httpstat.us/404",
+          prefix: "NOTFOUND",
+          description: "Non-existent ontology",
+        );
 
-      expect(result.isLeft(), isTrue);
-      // Should be a NetworkFailure
-      final failure = result.getLeft().getOrElse(() => throw Exception('Should be left'));
-      expect(failure, isA<NetworkFailure>());
-    }, timeout: Timeout(Duration(seconds: 30)));
+        expect(result.isLeft(), isTrue);
+        // Should be a NetworkFailure
+        final failure = result.getLeft().getOrElse(
+          () => throw Exception('Should be left'),
+        );
+        expect(failure, isA<NetworkFailure>());
+      },
+      timeout: Timeout(Duration(seconds: 30)),
+    );
 
-    test('should handle invalid domain gracefully', () async {
-      final result = await usecase.execute(
-        url: "http://invalid.domain.that.does.not.exist.ever/ontology.ttl",
-        prefix: "INVALID",
-        description: "Invalid domain ontology",
-      );
+    test(
+      'should handle invalid domain gracefully',
+      () async {
+        final result = await usecase.execute(
+          url: "http://invalid.domain.that.does.not.exist.ever/ontology.ttl",
+          prefix: "INVALID",
+          description: "Invalid domain ontology",
+        );
 
-      expect(result.isLeft(), isTrue);
-      final failure = result.getLeft().getOrElse(() => throw Exception('Should be left'));
-      expect(failure, isA<NetworkFailure>());
-    }, timeout: Timeout(Duration(seconds: 30)));
+        expect(result.isLeft(), isTrue);
+        final failure = result.getLeft().getOrElse(
+          () => throw Exception('Should be left'),
+        );
+        expect(failure, isA<NetworkFailure>());
+      },
+      timeout: Timeout(Duration(seconds: 30)),
+    );
 
     test('should handle malformed URL gracefully', () async {
       final result = await usecase.execute(
@@ -77,7 +89,9 @@ void main() {
       );
 
       expect(result.isLeft(), isTrue);
-      final failure = result.getLeft().getOrElse(() => throw Exception('Should be left'));
+      final failure = result.getLeft().getOrElse(
+        () => throw Exception('Should be left'),
+      );
       expect(failure, isA<NetworkFailure>());
     });
 
@@ -90,7 +104,9 @@ void main() {
       );
 
       expect(result.isLeft(), isTrue);
-      final failure = result.getLeft().getOrElse(() => throw Exception('Should be left'));
+      final failure = result.getLeft().getOrElse(
+        () => throw Exception('Should be left'),
+      );
       expect(failure, isA<NetworkFailure>());
     }, timeout: Timeout(Duration(seconds: 15))); // Shorter timeout for test
 
@@ -102,7 +118,9 @@ void main() {
       );
 
       expect(result.isLeft(), isTrue);
-      final failure = result.getLeft().getOrElse(() => throw Exception('Should be left'));
+      final failure = result.getLeft().getOrElse(
+        () => throw Exception('Should be left'),
+      );
       expect(failure, isA<NetworkFailure>());
     });
   });

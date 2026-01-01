@@ -15,10 +15,7 @@ void main() {
   group('Namespace', () {
     test('should create namespace with required fields', () {
       // When
-      final namespace = Namespace(
-        uri: testUri,
-        prefix: testPrefix,
-      );
+      final namespace = Namespace(uri: testUri, prefix: testPrefix);
 
       // Then
       expect(namespace.uri, testUri);
@@ -106,8 +103,16 @@ void main() {
 
     test('should not be equal when other fields differ but prefix same', () {
       // Given
-      final ns1 = Namespace(uri: testUri, prefix: testPrefix, description: testDescription);
-      final ns2 = Namespace(uri: Uri.parse('http://different.com'), prefix: testPrefix, description: 'Different');
+      final ns1 = Namespace(
+        uri: testUri,
+        prefix: testPrefix,
+        description: testDescription,
+      );
+      final ns2 = Namespace(
+        uri: Uri.parse('http://different.com'),
+        prefix: testPrefix,
+        description: 'Different',
+      );
 
       // Then
       expect(ns1, equals(ns2)); // Only prefix matters for equality
@@ -115,7 +120,11 @@ void main() {
 
     test('should have correct props for Equatable', () {
       // Given
-      final namespace = Namespace(uri: testUri, prefix: testPrefix, description: testDescription);
+      final namespace = Namespace(
+        uri: testUri,
+        prefix: testPrefix,
+        description: testDescription,
+      );
 
       // Then
       expect(namespace.props, [testPrefix]);

@@ -133,7 +133,8 @@ void main() {
 
     test('should parse N-Triples content', () async {
       // Given
-      final content = '<http://example.org/person1> <http://xmlns.com/foaf/0.1/name> "John Doe" .';
+      final content =
+          '<http://example.org/person1> <http://xmlns.com/foaf/0.1/name> "John Doe" .';
       final url = 'http://example.org/test.nt';
 
       // When

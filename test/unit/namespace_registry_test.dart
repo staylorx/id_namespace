@@ -4,7 +4,6 @@ import 'package:test/test.dart';
 void main() {
   late Namespace testNamespace1;
   late Namespace testNamespace2;
-  late Namespace testNamespace3;
 
   setUp(() {
     testNamespace1 = Namespace(
@@ -16,11 +15,6 @@ void main() {
       uri: Uri.parse('http://example.com/ns2'),
       prefix: 'ns2',
       description: 'Test namespace 2',
-    );
-    testNamespace3 = Namespace(
-      uri: Uri.parse('http://example.com/ns1'),
-      prefix: 'ns1', // Same prefix as ns1
-      description: 'Different description',
     );
   });
 
@@ -57,7 +51,9 @@ void main() {
     test('should not be equal when registries have different sizes', () {
       // Given
       final registry1 = NamespaceRegistry(registry: {'ns1': testNamespace1});
-      final registry2 = NamespaceRegistry(registry: {'ns1': testNamespace1, 'ns2': testNamespace2});
+      final registry2 = NamespaceRegistry(
+        registry: {'ns1': testNamespace1, 'ns2': testNamespace2},
+      );
 
       // Then
       expect(registry1, isNot(equals(registry2)));

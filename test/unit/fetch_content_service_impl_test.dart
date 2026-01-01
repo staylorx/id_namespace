@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:id_namespace/id_namespace.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 // Mock Dio for testing HTTP requests
@@ -85,8 +84,6 @@ void main() {
       expect(failure, isA<NetworkFailure>());
     });
 
-
-
     test('should fetch content from HTTP URL', () async {
       // Given
       const url = 'http://example.com/test.rdf';
@@ -127,27 +124,30 @@ void main() {
       expect(failure, isA<NetworkFailure>());
     });
 
-    test('should return NetworkFailure for DioException (network error)', () async {
-      // Given
-      const url = 'http://example.com/test.rdf';
-      when(() => mockDio.get(any())).thenThrow(
-        DioException(
-          requestOptions: RequestOptions(path: url),
-          type: DioExceptionType.connectionError,
-          message: 'Connection failed',
-        ),
-      );
+    test(
+      'should return NetworkFailure for DioException (network error)',
+      () async {
+        // Given
+        const url = 'http://example.com/test.rdf';
+        when(() => mockDio.get(any())).thenThrow(
+          DioException(
+            requestOptions: RequestOptions(path: url),
+            type: DioExceptionType.connectionError,
+            message: 'Connection failed',
+          ),
+        );
 
-      // When
-      final result = await service.fetchContent(url: url);
+        // When
+        final result = await service.fetchContent(url: url);
 
-      // Then
-      expect(result.isLeft(), isTrue);
-      final failure = result.getLeft().getOrElse(
-        () => throw Exception('Should be left'),
-      );
-      expect(failure, isA<NetworkFailure>());
-    });
+        // Then
+        expect(result.isLeft(), isTrue);
+        final failure = result.getLeft().getOrElse(
+          () => throw Exception('Should be left'),
+        );
+        expect(failure, isA<NetworkFailure>());
+      },
+    );
 
     test('should return NetworkFailure for timeout', () async {
       // Given

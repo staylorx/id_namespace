@@ -61,7 +61,10 @@ ex:subject "literal" ex:object .  # Wrong order
       );
 
       expect(result.isLeft(), isTrue);
-      expect(result.getLeft().getOrElse(() => throw Exception('Should be left')), isA<ParseFailure>());
+      expect(
+        result.getLeft().getOrElse(() => throw Exception('Should be left')),
+        isA<ParseFailure>(),
+      );
 
       await tempDir.delete(recursive: true);
     });
@@ -85,7 +88,10 @@ ex:subject "literal" ex:object .  # Wrong order
       );
 
       expect(result.isLeft(), isTrue);
-      expect(result.getLeft().getOrElse(() => throw Exception('Should be left')), isA<ParseFailure>());
+      expect(
+        result.getLeft().getOrElse(() => throw Exception('Should be left')),
+        isA<ParseFailure>(),
+      );
 
       await tempDir.delete(recursive: true);
     });
