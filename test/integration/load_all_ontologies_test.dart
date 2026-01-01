@@ -3,16 +3,7 @@ import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:logging/logging.dart';
-import 'package:id_namespace/src/data/core/repositories/id_registry_repository_impl.dart';
-import 'package:id_namespace/src/data/core/services/fetch_content_service_impl.dart';
-import 'package:id_namespace/src/data/core/services/rdf_parsing_service_impl.dart';
-import 'package:id_namespace/src/data/storage/repositories/file_based_id_storage.dart';
-import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
-import 'package:id_namespace/src/domain/core/services/fetch_content_service.dart';
-import 'package:id_namespace/src/domain/core/services/rdf_parsing_service.dart';
-import 'package:id_namespace/src/domain/core/usecases/fetch_and_register_ontology_usecase.dart';
-import 'package:id_namespace/src/domain/core/usecases/get_all_namespaces_usecase.dart';
-import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
+import 'package:id_namespace/id_namespace.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,12 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:id_namespace/src/data/core/repositories/id_registry_repository_impl.dart';
-import 'package:id_namespace/src/data/storage/repositories/in_memory_id_storage.dart';
-import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
-import 'package:id_namespace/src/domain/core/usecases/add_namespace_usecase.dart';
-import 'package:id_namespace/src/domain/core/usecases/get_namespace_by_uri_usecase.dart';
-import 'package:id_namespace/src/domain/core/value_objects/namespace.dart';
-import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
-import 'package:id_namespace/src/utils/failures.dart';
+import 'package:id_namespace/id_namespace.dart';
 import 'package:test/test.dart';
 
 void main() {

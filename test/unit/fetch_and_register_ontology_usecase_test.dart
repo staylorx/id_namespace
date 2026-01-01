@@ -1,10 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
-import 'package:id_namespace/src/domain/core/services/fetch_content_service.dart';
-import 'package:id_namespace/src/domain/core/services/rdf_parsing_service.dart';
-import 'package:id_namespace/src/domain/core/usecases/fetch_and_register_ontology_usecase.dart';
-import 'package:id_namespace/src/domain/core/value_objects/namespace.dart';
-import 'package:id_namespace/src/utils/failures.dart';
+import 'package:id_namespace/id_namespace.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rdf_core/rdf_core.dart';
 import 'package:test/test.dart';

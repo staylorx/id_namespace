@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
-import 'package:id_namespace/src/data/core/services/fetch_content_service_impl.dart';
-import 'package:id_namespace/src/domain/core/services/fetch_content_service.dart';
-import 'package:id_namespace/src/utils/failures.dart';
+import 'package:id_namespace/id_namespace.dart';
 import 'package:test/test.dart';
 
 void main() {

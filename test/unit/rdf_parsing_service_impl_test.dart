@@ -1,7 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:id_namespace/src/data/core/services/rdf_parsing_service_impl.dart';
-import 'package:id_namespace/src/domain/core/services/rdf_parsing_service.dart';
-import 'package:id_namespace/src/utils/failures.dart';
+import 'package:id_namespace/id_namespace.dart';
 import 'package:test/test.dart';
 
 void main() {
