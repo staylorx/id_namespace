@@ -45,4 +45,12 @@ abstract class IdRegistryRepository {
     required String prefix,
     String? description,
   });
+
+  /// Fetches the content of an ontology from the given URL.
+  ///
+  /// Supports both file:// and http/https URLs.
+  /// Returns [NetworkFailure] if fetching fails.
+  Future<Either<Failure, String>> fetchOntologyContent({
+    required String url,
+  });
 }

@@ -87,11 +87,51 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
     String? description,
   }) async {
     try {
+      final contentEither = await _fetchContent(url);
+      return await contentEither.match(
+        (failure) => Future.value(Left(failure)),
+        (content) async {
+          final uri = Uri.parse(url);
+
+          // Determine format from URL extension
+          final format = NamespaceDto.getFormatFromUrl(uri.path);
+
+          // Parse RDF content
+          final rdfGraph = NamespaceDto.parseRdfContent(content, format);
+
+          final namespace = Namespace(
+            uri: uri,
+            prefix: prefix,
+            description: description,
+            rdfGraph: rdfGraph,
+          );
+
+          return await add(namespace: namespace);
+        },
+      );
+    } on DioException catch (e) {
+      return Left(NetworkFailure('Network error: ${e.message}'));
+    } catch (e) {
+      return Left(ParseFailure('Failed to parse RDF: $e'));
+    }
+  }
+
+  /// Fetches the content of an ontology from the given URL.
+  @override
+  Future<Either<Failure, String>> fetchOntologyContent({
+    required String url,
+  }) async {
+    return await _fetchContent(url);
+  }
+
+  /// Private method to fetch content from URL or file.
+  Future<Either<Failure, String>> _fetchContent(String url) async {
+    try {
       final uri = Uri.parse(url);
-      final String content;
       if (uri.scheme == 'file') {
         final file = File(uri.toFilePath());
-        content = await file.readAsString();
+        final content = await file.readAsString();
+        return Right(content);
       } else {
         final dio = Dio();
         final response = await dio.get(url);
@@ -100,27 +140,13 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
             NetworkFailure('Failed to fetch ontology: ${response.statusCode}'),
           );
         }
-        content = response.data as String;
+        final content = response.data as String;
+        return Right(content);
       }
-
-      // Determine format from URL extension
-      final format = NamespaceDto.getFormatFromUrl(uri.path);
-
-      // Parse RDF content
-      final rdfGraph = NamespaceDto.parseRdfContent(content, format);
-
-      final namespace = Namespace(
-        uri: uri,
-        prefix: prefix,
-        description: description,
-        rdfGraph: rdfGraph,
-      );
-
-      return await add(namespace: namespace);
     } on DioException catch (e) {
       return Left(NetworkFailure('Network error: ${e.message}'));
     } catch (e) {
-      return Left(ParseFailure('Failed to parse RDF: $e'));
+      return Left(NetworkFailure('Failed to fetch content: $e'));
     }
   }
 
