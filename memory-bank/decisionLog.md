@@ -10,3 +10,19 @@ This file records architectural and implementation decisions...
 ## Architecture Refactoring
 
 [2026-01-01 01:35:25] - Refactored fetchAndRegisterOntology to separate concerns: created FetchContentService and RdfParsingService interfaces in domain, implemented in data layer, updated usecase to orchestrate steps, removed monolithic method from repository. This improves testability and reusability.
+
+## Architectural Decisions
+
+[2026-01-01 05:06:50] - Adopted Clean Architecture pattern with strict separation of domain, data, and presentation layers. Domain layer contains only business logic and abstractions, data layer implements interfaces, presentation layer provides public API. This ensures testability, maintainability, and independence from external frameworks.
+
+[2026-01-01 05:06:50] - Implemented functional programming with fpdart library for error handling using Either<Failure, Result> pattern. This provides type-safe error handling without exceptions, improving code reliability and composability.
+
+[2026-01-01 05:06:50] - Established dependency injection pattern for use cases, requiring all dependencies to be injected through constructors. This maintains clean architecture principles and enables easy testing with mocks.
+
+[2026-01-01 05:06:50] - Designed storage abstraction with repository pattern, allowing multiple storage implementations (in-memory, file-based, caching) while keeping domain layer agnostic to storage details.
+
+[2026-01-01 05:06:50] - Chose comprehensive testing strategy with both unit and integration tests, targeting high coverage to ensure reliability. All public APIs and edge cases are tested, with integration tests covering full workflows.
+
+## Related Documentation
+
+- Implemented patterns from these decisions: [systemPatterns.md](systemPatterns.md)

@@ -14,3 +14,9 @@ This file tracks the project's progress...
 [2026-01-01 04:11:50] - Completed adding comprehensive unit tests for all untested storage repositories and entities. Created tests for in_memory_id_storage.dart (8 tests), caching_storage.dart (11 tests), file_based_id_storage.dart (11 tests including edge cases), namespace_registry.dart (5 tests), and namespace.dart (8 tests). All tests pass and cover functionality, error cases, and edge cases like invalid JSON for file-based storage.
 
 [2026-01-01 04:50:55] - Completed comprehensive code tidy: reviewed for style violations, bugs, non-idiomatic Dart, ensured named parameters, no errors/warnings, formatted code, added dartdoc comments, verified clean architecture, no failing tests, removed unused imports. All 103 tests pass, code formatted with 11 changes.
+
+[2026-01-01 05:06:40] - Updated README.md with comprehensive documentation: added detailed architecture overview, usage examples for namespace management and ontology loading, API reference with all core classes and use cases, supported RDF formats, error handling guide, and contribution guidelines. Documentation now provides complete guidance for developers integrating the library.
+
+## Related Documentation
+
+- Current development status: [activeContext.md](activeContext.md)
