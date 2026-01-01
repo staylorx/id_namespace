@@ -10,6 +10,7 @@ class GetNamespaceByUriUsecase {
 
   GetNamespaceByUriUsecase({required this.repository});
 
+  /// Executes the usecase to get a namespace by URI.
   Future<Either<Failure, Namespace>> execute({required Uri uri}) async {
     return await repository.getNamespaceByUri(uri: uri);
   }

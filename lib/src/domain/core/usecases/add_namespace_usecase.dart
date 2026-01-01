@@ -10,6 +10,7 @@ class AddNamespaceUsecase {
 
   AddNamespaceUsecase({required this.repository});
 
+  /// Executes the usecase to add a namespace.
   Future<Either<Failure, Unit>> execute({required Namespace namespace}) async {
     return await repository.add(namespace: namespace);
   }

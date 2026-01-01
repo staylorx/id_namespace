@@ -59,7 +59,7 @@ class FileBasedIdStorage implements IdStorage {
 
   /// Adds the namespace to the storage.
   @override
-  Future<Either<Failure, Unit>> add(Namespace namespace) async {
+  Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) return loadResult;
 
@@ -76,7 +76,7 @@ class FileBasedIdStorage implements IdStorage {
 
   /// Removes the namespace from the storage.
   @override
-  Future<Either<Failure, Unit>> remove(Namespace namespace) async {
+  Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) return loadResult;
 
@@ -87,7 +87,7 @@ class FileBasedIdStorage implements IdStorage {
 
   /// Checks if the namespace exists in the storage.
   @override
-  Future<Either<Failure, bool>> contains(Namespace namespace) async {
+  Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
     final loadResult = await _loadFromFile();
     if (loadResult.isLeft()) {
       return Left(

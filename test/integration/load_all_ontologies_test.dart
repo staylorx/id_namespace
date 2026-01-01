@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
+import 'package:logging/logging.dart';
 import 'package:id_namespace/src/data/core/repositories/id_registry_repository_impl.dart';
 import 'package:id_namespace/src/data/core/services/fetch_content_service_impl.dart';
 import 'package:id_namespace/src/data/core/services/rdf_parsing_service_impl.dart';
@@ -24,6 +25,10 @@ void main() {
   late String tempFilePath;
 
   setUp(() async {
+    Logger.root.level = Level.WARNING;
+    Logger.root.onRecord.listen(
+      (record) => stdout.writeln('${record.level.name}: ${record.message}'),
+    );
     final tempDir = await Directory.systemTemp.createTemp('id_namespace_test_');
     //final tempDir = Directory('build');
     tempFilePath = '${tempDir.path}/storage.json';
@@ -49,6 +54,7 @@ void main() {
   test(
     'should load all ontologies from JSON and register them',
     () async {
+      final logger = Logger('LoadAllOntologiesTest');
       // Read ontologies.json
       final ontologiesFile = File('test/assets/ontologies.json');
       final content = await ontologiesFile.readAsString();
@@ -69,7 +75,7 @@ void main() {
           .toList();
       final failedCount = results.length - successfulResults.length;
       if (failedCount > 0) {
-        print('Warning: $failedCount ontologies failed to load.');
+        logger.warning('Warning: $failedCount ontologies failed to load.');
       }
 
       // Verify successful ones are registered

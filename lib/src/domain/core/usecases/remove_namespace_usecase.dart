@@ -10,6 +10,7 @@ class RemoveNamespaceUsecase {
 
   RemoveNamespaceUsecase({required this.repository});
 
+  /// Executes the usecase to remove a namespace.
   Future<Either<Failure, Unit>> execute({required Namespace namespace}) async {
     return await repository.remove(namespace: namespace);
   }

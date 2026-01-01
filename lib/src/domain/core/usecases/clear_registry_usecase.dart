@@ -9,6 +9,7 @@ class ClearRegistryUsecase {
 
   ClearRegistryUsecase({required this.repository});
 
+  /// Executes the usecase to clear all registrations.
   Future<Either<Failure, Unit>> execute() async {
     return await repository.clear();
   }

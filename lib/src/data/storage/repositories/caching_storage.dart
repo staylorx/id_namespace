@@ -19,8 +19,8 @@ class CachedIdStorage implements IdStorage {
   CachedIdStorage({required IdStorage storage}) : _storage = storage;
 
   @override
-  Future<Either<Failure, Unit>> add(Namespace namespace) async {
-    final result = await _storage.add(namespace);
+  Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
+    final result = await _storage.add(namespace: namespace);
     return result.fold((failure) => Left(failure), (_) {
       // Update cache on success
       _cache.add(namespace);
@@ -30,8 +30,8 @@ class CachedIdStorage implements IdStorage {
   }
 
   @override
-  Future<Either<Failure, Unit>> remove(Namespace namespace) async {
-    final result = await _storage.remove(namespace);
+  Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
+    final result = await _storage.remove(namespace: namespace);
     return result.fold((failure) => Left(failure), (_) {
       // Update cache on success
       _cache.remove(namespace);
@@ -40,13 +40,13 @@ class CachedIdStorage implements IdStorage {
   }
 
   @override
-  Future<Either<Failure, bool>> contains(Namespace namespace) async {
+  Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
     // Check cache first if loaded
     if (_cacheLoaded) {
       return Right(_cache.contains(namespace));
     } else {
       // Check storage
-      final result = await _storage.contains(namespace);
+      final result = await _storage.contains(namespace: namespace);
       return result;
     }
   }

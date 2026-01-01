@@ -10,6 +10,7 @@ class IsRegisteredUsecase {
 
   IsRegisteredUsecase({required this.repository});
 
+  /// Executes the usecase to check if a namespace is registered.
   Future<Either<Failure, bool>> execute({required Namespace namespace}) async {
     return await repository.isRegistered(namespace: namespace);
   }

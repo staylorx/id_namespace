@@ -13,7 +13,7 @@ class InMemoryIdStorage implements IdStorage {
 
   /// Adds the namespace.
   @override
-  Future<Either<Failure, Unit>> add(Namespace namespace) async {
+  Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
     final dto = NamespaceDto.fromEntity(namespace);
     if (_data.contains(dto)) {
       return Left(
@@ -26,7 +26,7 @@ class InMemoryIdStorage implements IdStorage {
 
   /// Removes the namespace.
   @override
-  Future<Either<Failure, Unit>> remove(Namespace namespace) async {
+  Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
     final dto = NamespaceDto.fromEntity(namespace);
     _data.remove(dto);
     return Right(unit);
@@ -34,7 +34,7 @@ class InMemoryIdStorage implements IdStorage {
 
   /// Checks if the namespace exists.
   @override
-  Future<Either<Failure, bool>> contains(Namespace namespace) async {
+  Future<Either<Failure, bool>> contains({required Namespace namespace}) async {
     final dto = NamespaceDto.fromEntity(namespace);
     return Right(_data.contains(dto));
   }

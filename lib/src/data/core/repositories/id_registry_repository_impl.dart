@@ -13,13 +13,13 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   /// Registers the namespace.
   @override
   Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
-    return await storage.add(namespace);
+    return await storage.add(namespace: namespace);
   }
 
   /// Unregisters the namespace.
   @override
   Future<Either<Failure, Unit>> remove({required Namespace namespace}) async {
-    return await storage.remove(namespace);
+    return await storage.remove(namespace: namespace);
   }
 
   /// Checks if the namespace is registered.
@@ -27,7 +27,7 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   Future<Either<Failure, bool>> isRegistered({
     required Namespace namespace,
   }) async {
-    return await storage.contains(namespace);
+    return await storage.contains(namespace: namespace);
   }
 
   /// Returns namespace by prefix.

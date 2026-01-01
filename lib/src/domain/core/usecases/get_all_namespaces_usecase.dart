@@ -10,6 +10,7 @@ class GetAllNamespacesUsecase {
 
   GetAllNamespacesUsecase({required this.repository});
 
+  /// Executes the usecase to get all registered namespaces.
   Future<Either<Failure, Set<Namespace>>> execute() async {
     return await repository.getAll();
   }

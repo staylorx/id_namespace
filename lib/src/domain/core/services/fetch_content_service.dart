@@ -8,5 +8,5 @@ abstract class FetchContentService {
   ///
   /// Supports both HTTP/HTTPS URLs and file:// URLs.
   /// Returns [NetworkFailure] if fetching fails.
-  Future<Either<Failure, String>> fetchContent(String url);
+  Future<Either<Failure, String>> fetchContent({required String url});
 }

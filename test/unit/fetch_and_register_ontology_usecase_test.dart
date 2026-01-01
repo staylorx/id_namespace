@@ -58,8 +58,9 @@ void main() {
     test('should return failure when fetchContent fails', () async {
       // Given
       final failure = NetworkFailure('Failed to fetch content');
-      when(() => mockFetchContentService.fetchContent(url))
-          .thenAnswer((_) async => Left(failure));
+      when(
+        () => mockFetchContentService.fetchContent(url: url),
+      ).thenAnswer((_) async => Left(failure));
 
       // When
       final result = await usecase.execute(
@@ -70,8 +71,11 @@ void main() {
 
       // Then
       expect(result.isLeft(), isTrue);
-      expect(result.getLeft().getOrElse(() => throw Exception('Should be left')), failure);
-      verify(() => mockFetchContentService.fetchContent(url)).called(1);
+      expect(
+        result.getLeft().getOrElse(() => throw Exception('Should be left')),
+        failure,
+      );
+      verify(() => mockFetchContentService.fetchContent(url: url)).called(1);
       verifyNever(() => mockRdfParsingService.parseRdf(any(), any()));
       verifyNever(() => mockRepository.add(namespace: any(named: 'namespace')));
     });
@@ -81,10 +85,12 @@ void main() {
       const content = '<rdf:RDF></rdf:RDF>';
       final fetchResult = Right<Failure, String>(content);
       final parseFailure = ParseFailure('Failed to parse RDF');
-      when(() => mockFetchContentService.fetchContent(url))
-          .thenAnswer((_) async => fetchResult);
-      when(() => mockRdfParsingService.parseRdf(content, url))
-          .thenAnswer((_) async => Left(parseFailure));
+      when(
+        () => mockFetchContentService.fetchContent(url: url),
+      ).thenAnswer((_) async => fetchResult);
+      when(
+        () => mockRdfParsingService.parseRdf(content, url),
+      ).thenAnswer((_) async => Left(parseFailure));
 
       // When
       final result = await usecase.execute(
@@ -95,8 +101,11 @@ void main() {
 
       // Then
       expect(result.isLeft(), isTrue);
-      expect(result.getLeft().getOrElse(() => throw Exception('Should be left')), parseFailure);
-      verify(() => mockFetchContentService.fetchContent(url)).called(1);
+      expect(
+        result.getLeft().getOrElse(() => throw Exception('Should be left')),
+        parseFailure,
+      );
+      verify(() => mockFetchContentService.fetchContent(url: url)).called(1);
       verify(() => mockRdfParsingService.parseRdf(content, url)).called(1);
       verifyNever(() => mockRepository.add(namespace: any(named: 'namespace')));
     });
@@ -108,12 +117,15 @@ void main() {
       final rdfGraph = RdfGraph(triples: []);
       final parseResult = Right<Failure, RdfGraph>(rdfGraph);
       final addFailure = StorageFailure('Failed to add namespace');
-      when(() => mockFetchContentService.fetchContent(url))
-          .thenAnswer((_) async => fetchResult);
-      when(() => mockRdfParsingService.parseRdf(content, url))
-          .thenAnswer((_) async => parseResult);
-      when(() => mockRepository.add(namespace: any(named: 'namespace')))
-          .thenAnswer((_) async => Left(addFailure));
+      when(
+        () => mockFetchContentService.fetchContent(url: url),
+      ).thenAnswer((_) async => fetchResult);
+      when(
+        () => mockRdfParsingService.parseRdf(content, url),
+      ).thenAnswer((_) async => parseResult);
+      when(
+        () => mockRepository.add(namespace: any(named: 'namespace')),
+      ).thenAnswer((_) async => Left(addFailure));
 
       // When
       final result = await usecase.execute(
@@ -124,10 +136,15 @@ void main() {
 
       // Then
       expect(result.isLeft(), isTrue);
-      expect(result.getLeft().getOrElse(() => throw Exception('Should be left')), addFailure);
-      verify(() => mockFetchContentService.fetchContent(url)).called(1);
+      expect(
+        result.getLeft().getOrElse(() => throw Exception('Should be left')),
+        addFailure,
+      );
+      verify(() => mockFetchContentService.fetchContent(url: url)).called(1);
       verify(() => mockRdfParsingService.parseRdf(content, url)).called(1);
-      verify(() => mockRepository.add(namespace: any(named: 'namespace'))).called(1);
+      verify(
+        () => mockRepository.add(namespace: any(named: 'namespace')),
+      ).called(1);
     });
 
     test('should succeed when all steps succeed', () async {
@@ -137,12 +154,15 @@ void main() {
       final rdfGraph = RdfGraph(triples: []);
       final parseResult = Right<Failure, RdfGraph>(rdfGraph);
       final addResult = Right<Failure, Unit>(unit);
-      when(() => mockFetchContentService.fetchContent(url))
-          .thenAnswer((_) async => fetchResult);
-      when(() => mockRdfParsingService.parseRdf(content, url))
-          .thenAnswer((_) async => parseResult);
-      when(() => mockRepository.add(namespace: any(named: 'namespace')))
-          .thenAnswer((_) async => addResult);
+      when(
+        () => mockFetchContentService.fetchContent(url: url),
+      ).thenAnswer((_) async => fetchResult);
+      when(
+        () => mockRdfParsingService.parseRdf(content, url),
+      ).thenAnswer((_) async => parseResult);
+      when(
+        () => mockRepository.add(namespace: any(named: 'namespace')),
+      ).thenAnswer((_) async => addResult);
 
       // When
       final result = await usecase.execute(
@@ -153,9 +173,11 @@ void main() {
 
       // Then
       expect(result.isRight(), isTrue);
-      verify(() => mockFetchContentService.fetchContent(url)).called(1);
+      verify(() => mockFetchContentService.fetchContent(url: url)).called(1);
       verify(() => mockRdfParsingService.parseRdf(content, url)).called(1);
-      verify(() => mockRepository.add(namespace: any(named: 'namespace'))).called(1);
+      verify(
+        () => mockRepository.add(namespace: any(named: 'namespace')),
+      ).called(1);
     });
   });
 }

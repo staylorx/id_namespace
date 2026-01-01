@@ -9,13 +9,13 @@ import '../../core/value_objects/namespace.dart';
 /// to be plugged into async versions of IdRegistry.
 abstract class IdStorage {
   /// Adds a namespace asynchronously.
-  Future<Either<Failure, Unit>> add(Namespace namespace);
+  Future<Either<Failure, Unit>> add({required Namespace namespace});
 
   /// Removes a namespace asynchronously.
-  Future<Either<Failure, Unit>> remove(Namespace namespace);
+  Future<Either<Failure, Unit>> remove({required Namespace namespace});
 
   /// Checks if the namespace exists asynchronously.
-  Future<Either<Failure, bool>> contains(Namespace namespace);
+  Future<Either<Failure, bool>> contains({required Namespace namespace});
 
   /// Returns all stored namespaces asynchronously.
   Future<Either<Failure, Set<Namespace>>> getAll();

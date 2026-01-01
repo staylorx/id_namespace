@@ -12,16 +12,20 @@ class FetchContentServiceImpl implements FetchContentService {
   final _logger = Logger('FetchContentServiceImpl');
 
   @override
-  Future<Either<Failure, String>> fetchContent(String url) async {
+  Future<Either<Failure, String>> fetchContent({required String url}) async {
     _logger.info('Attempting to fetch content from URL: $url');
     try {
       final uri = Uri.parse(url);
       if (uri.scheme == 'file') {
-        _logger.info('Detected file scheme, reading from file path: ${uri.toFilePath()}');
+        _logger.info(
+          'Detected file scheme, reading from file path: ${uri.toFilePath()}',
+        );
         final filePath = uri.toFilePath();
         final file = File(filePath);
         final content = await file.readAsString();
-        _logger.info('Successfully read ${content.length} characters from file');
+        _logger.info(
+          'Successfully read ${content.length} characters from file',
+        );
         return Right(content);
       } else {
         _logger.info('Detected HTTP scheme, making GET request to: $url');
@@ -29,16 +33,20 @@ class FetchContentServiceImpl implements FetchContentService {
         dio.options.receiveTimeout = Duration(seconds: 30);
         final response = await dio.get(url);
         if (response.statusCode != 200) {
-          final errorMsg = 'Failed to fetch content from $url: HTTP ${response.statusCode}';
+          final errorMsg =
+              'Failed to fetch content from $url: HTTP ${response.statusCode}';
           _logger.severe(errorMsg);
           return Left(NetworkFailure(errorMsg));
         }
         final content = response.data as String;
-        _logger.info('Successfully fetched ${content.length} characters from $url');
+        _logger.info(
+          'Successfully fetched ${content.length} characters from $url',
+        );
         return Right(content);
       }
     } on DioException catch (e) {
-      final errorMsg = 'Network error fetching $url: ${e.message} (type: ${e.type})';
+      final errorMsg =
+          'Network error fetching $url: ${e.message} (type: ${e.type})';
       _logger.severe(errorMsg);
       return Left(NetworkFailure(errorMsg));
     } catch (e) {

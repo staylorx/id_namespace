@@ -21,7 +21,7 @@ void main() {
       final fileUrl = Uri.file(file.absolute.path).toString();
 
       // When
-      final result = await service.fetchContent(fileUrl);
+      final result = await service.fetchContent(url: fileUrl);
 
       // Then
       expect(result.isRight(), isTrue);
@@ -33,7 +33,7 @@ void main() {
       final invalidUrl = 'file:///nonexistent/path.rdf';
 
       // When
-      final result = await service.fetchContent(invalidUrl);
+      final result = await service.fetchContent(url: invalidUrl);
 
       // Then
       expect(result.isLeft(), isTrue);
