@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:rdf_core/rdf_core.dart';
-import 'package:rdf_xml/rdf_xml.dart';
-
 import '../../../domain/core/value_objects/namespace.dart';
 
 /// Data Transfer Object for Namespace entity, used for serialization and storage.
@@ -87,45 +85,6 @@ class NamespaceDto with EquatableMixin {
       return rdf.decode(rdfString, contentType: 'text/turtle');
     } catch (e) {
       return null;
-    }
-  }
-
-  /// Determines RDF format from URL path.
-  static String getFormatFromUrl(String path) {
-    if (path.endsWith('.ttl') || path.endsWith('.turtle')) {
-      return 'turtle';
-    } else if (path.endsWith('.rdf') || path.endsWith('.xml')) {
-      return 'rdfxml';
-    } else if (path.endsWith('.nt')) {
-      return 'ntriples';
-    } else if (path.endsWith('.jsonld')) {
-      return 'jsonld';
-    } else {
-      return 'turtle'; // default
-    }
-  }
-
-  /// Parses RDF content into an [RdfGraph].
-  static RdfGraph parseRdfContent(String content, String format) {
-    switch (format) {
-      case 'rdfxml':
-        return rdfxml.decode(content);
-      default:
-        String contentType;
-        switch (format) {
-          case 'turtle':
-            contentType = 'text/turtle';
-            break;
-          case 'ntriples':
-            contentType = 'application/n-triples';
-            break;
-          case 'jsonld':
-            contentType = 'application/ld+json';
-            break;
-          default:
-            contentType = 'text/turtle'; // default to turtle
-        }
-        return rdf.decode(content, contentType: contentType);
     }
   }
 }

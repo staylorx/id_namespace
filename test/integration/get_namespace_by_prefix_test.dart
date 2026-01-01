@@ -36,7 +36,9 @@ void main() {
 
     // Then
     expect(result.isRight(), isTrue);
-    final retrievedNamespace = result.getRight().getOrElse(() => throw Exception('Should be right'));
+    final retrievedNamespace = result.getRight().getOrElse(
+      () => throw Exception('Should be right'),
+    );
     expect(retrievedNamespace.uri, namespace.uri);
     expect(retrievedNamespace.prefix, namespace.prefix);
     expect(retrievedNamespace.description, namespace.description);
@@ -48,7 +50,9 @@ void main() {
 
     // Then
     expect(result.isLeft(), isTrue);
-    final failure = result.getLeft().getOrElse(() => throw Exception('Should be left'));
+    final failure = result.getLeft().getOrElse(
+      () => throw Exception('Should be left'),
+    );
     expect(failure, isA<NotFoundFailure>());
   });
 
@@ -74,7 +78,9 @@ void main() {
 
     // Then
     expect(result.isRight(), isTrue);
-    final retrievedNamespace = result.getRight().getOrElse(() => throw Exception('Should be right'));
+    final retrievedNamespace = result.getRight().getOrElse(
+      () => throw Exception('Should be right'),
+    );
     expect(retrievedNamespace.uri, namespace1.uri);
     expect(retrievedNamespace.prefix, namespace1.prefix);
     expect(retrievedNamespace.description, namespace1.description);

@@ -30,5 +30,5 @@ class Namespace with EquatableMixin {
   }
 
   @override
-  List<Object?> get props => [uri];
+  List<Object?> get props => [prefix];
 }

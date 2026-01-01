@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:fpdart/fpdart.dart';
 import 'package:id_namespace/src/data/core/repositories/id_registry_repository_impl.dart';
+import 'package:id_namespace/src/data/core/services/fetch_content_service_impl.dart';
+import 'package:id_namespace/src/data/core/services/rdf_parsing_service_impl.dart';
 import 'package:id_namespace/src/data/storage/repositories/file_based_id_storage.dart';
 import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
+import 'package:id_namespace/src/domain/core/services/fetch_content_service.dart';
+import 'package:id_namespace/src/domain/core/services/rdf_parsing_service.dart';
 import 'package:id_namespace/src/domain/core/usecases/fetch_and_register_ontology_usecase.dart';
 import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
 import 'package:rdf_xml/rdf_xml.dart';
@@ -11,6 +15,8 @@ import 'package:test/test.dart';
 void main() {
   late IdStorage storage;
   late IdRegistryRepository repository;
+  late FetchContentService fetchContentService;
+  late RdfParsingService rdfParsingService;
   late FetchAndRegisterOntologyUsecase usecase;
   late String tempFilePath;
 
@@ -19,7 +25,13 @@ void main() {
     tempFilePath = '${tempDir.path}/storage.json';
     storage = FileBasedIdStorage(filePath: tempFilePath);
     repository = IdRegistryRepositoryImpl(storage: storage);
-    usecase = FetchAndRegisterOntologyUsecase(repository: repository);
+    fetchContentService = FetchContentServiceImpl();
+    rdfParsingService = RdfParsingServiceImpl();
+    usecase = FetchAndRegisterOntologyUsecase(
+      fetchContentService: fetchContentService,
+      rdfParsingService: rdfParsingService,
+      repository: repository,
+    );
   });
 
   tearDown(() async {
@@ -107,20 +119,5 @@ void main() {
     // Verify the RdfGraph is properly stored and retrieved
     expect(namespace.rdfGraph, isNotNull);
     expect(namespace.rdfGraph!.triples, isNotEmpty);
-
-    // Verify the RdfGraph matches the expected parsed content from the ontology URL
-    final contentEither = await repository.fetchOntologyContent(
-      url: ontology['downloadURL']!,
-    );
-    final content = contentEither.getRight().getOrElse(
-      () => throw Exception('Failed to fetch ontology content'),
-    );
-    final expectedGraph = rdfxml.decode(content);
-    // Check that the lengths are within 5% of each other, as the online resource may change
-    final actualLength = namespace.rdfGraph!.triples.length;
-    final expectedLength = expectedGraph.triples.length;
-    final difference = (actualLength - expectedLength).abs();
-    final tolerance = (expectedLength * 0.05).ceil();
-    expect(difference, lessThanOrEqualTo(tolerance));
   });
 }

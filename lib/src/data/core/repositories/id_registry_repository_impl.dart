@@ -1,12 +1,8 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:id_namespace/src/utils/failures.dart';
 import 'package:id_namespace/src/domain/core/repositories/id_registry_repository.dart';
 import 'package:id_namespace/src/domain/core/value_objects/namespace.dart';
 import 'package:id_namespace/src/domain/storage/repositories/storage.dart';
-import 'package:id_namespace/src/data/core/models/namespace_dto.dart';
 
 /// Implementation of IdRegistryRepository using IdStorage.
 class IdRegistryRepositoryImpl implements IdRegistryRepository {
@@ -15,7 +11,6 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   IdRegistryRepositoryImpl({required this.storage});
 
   /// Registers the namespace.
-  /// TODO: check for duplicates before adding
   @override
   Future<Either<Failure, Unit>> add({required Namespace namespace}) async {
     return await storage.add(namespace);
@@ -78,77 +73,4 @@ class IdRegistryRepositoryImpl implements IdRegistryRepository {
   Future<Either<Failure, Unit>> clear() async {
     return await storage.clear();
   }
-
-  /// Fetches an ontology file from the internet and registers it.
-  @override
-  Future<Either<Failure, Unit>> fetchAndRegisterOntology({
-    required String url,
-    required String prefix,
-    String? description,
-  }) async {
-    try {
-      final contentEither = await _fetchContent(url);
-      return await contentEither.match(
-        (failure) => Future.value(Left(failure)),
-        (content) async {
-          final uri = Uri.parse(url);
-
-          // Determine format from URL extension
-          final format = NamespaceDto.getFormatFromUrl(uri.path);
-
-          // Parse RDF content
-          final rdfGraph = NamespaceDto.parseRdfContent(content, format);
-
-          final namespace = Namespace(
-            uri: uri,
-            prefix: prefix,
-            description: description,
-            rdfGraph: rdfGraph,
-          );
-
-          return await add(namespace: namespace);
-        },
-      );
-    } on DioException catch (e) {
-      return Left(NetworkFailure('Network error: ${e.message}'));
-    } catch (e) {
-      return Left(ParseFailure('Failed to parse RDF: $e'));
-    }
-  }
-
-  /// Fetches the content of an ontology from the given URL.
-  @override
-  Future<Either<Failure, String>> fetchOntologyContent({
-    required String url,
-  }) async {
-    return await _fetchContent(url);
-  }
-
-  /// Private method to fetch content from URL or file.
-  Future<Either<Failure, String>> _fetchContent(String url) async {
-    try {
-      final uri = Uri.parse(url);
-      if (uri.scheme == 'file') {
-        final file = File(uri.toFilePath());
-        final content = await file.readAsString();
-        return Right(content);
-      } else {
-        final dio = Dio();
-        final response = await dio.get(url);
-        if (response.statusCode != 200) {
-          return Left(
-            NetworkFailure('Failed to fetch ontology: ${response.statusCode}'),
-          );
-        }
-        final content = response.data as String;
-        return Right(content);
-      }
-    } on DioException catch (e) {
-      return Left(NetworkFailure('Network error: ${e.message}'));
-    } catch (e) {
-      return Left(NetworkFailure('Failed to fetch content: $e'));
-    }
-  }
-
-
 }
