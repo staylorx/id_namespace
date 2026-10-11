@@ -32,3 +32,5 @@ This file records architectural and implementation decisions...
 [2026-01-01 20:15:20] - Applied the architectural rule "Pure business rules: sync where possible. Anything that talks to the outside world: async at the boundary."
 
 Analysis showed that RDF parsing was unnecessarily async despite being pure synchronous business logic. Refactored RdfParsingService to return Either instead of Future<Either>, updated implementation and tests accordingly. All 103 tests pass, maintaining clean architecture principles.
+
+[2026-10-11] - Removed empty directory lib/src/data/storage/models/ (residue, not intentional). The package's storage models live in lib/src/data/core/models/ (see data.dart exports and the repositories' imports); storage/ only holds repositories/, and the canonical models location is core/models, not storage/models. The directory was empty, unreferenced by any import/config, and would be deleted by a scoped clean - its removal is a deliberate no-op that records the intent that no storage/models/ tree is expected. See kanban task t_c630641e.
